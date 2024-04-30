@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/camera_preview"
+        android:layout_width="325dp"
+        android:layout_height="481dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Point your camera to an object \n It will show the word in chosen language"
+        android:layout_marginTop="550dp"
+        android:textSize="20dp"
+        android:fontFamily="@font/playfair"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/capture_button"
+        android:layout_width="110dp"
+        android:layout_height="74dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="49dp"
+        android:backgroundTint="#FDFDFD"
+        android:src="@drawable/ic_camera_download" />
+
+
+</RelativeLayout>
