@@ -11,7 +11,7 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@tools:sample/avatars"
             app:srcCompat="@drawable/belangue_favicon_color" />
@@ -21,14 +21,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/playfair"
-            android:text="@string/loginmsg1" />
+            android:text="@string/loginmsg1"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poller_one"
-            android:text="@string/loginmsg2" />
+            android:text="@string/loginmsg2"
+            android:textSize="24sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,20 +41,25 @@
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/username" />
+                android:fontFamily="@font/playfair"
+                android:text="@string/username"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/editTextText2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:fontFamily="@font/playfair"
                 android:hint="@string/usernamePrompt"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/playfair"
                 android:text="@string/password" />
 
             <EditText
@@ -60,8 +67,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:fontFamily="@font/playfair"
                 android:hint="@string/passwordPrompt"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_background_color"
+                    android:fontFamily="@font/poller_one"
+                    android:text="@string/loginBtn" />
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/transparent_bg_bordered_button"
+                    android:fontFamily="@font/poller_one"
+                    android:text="@string/createAccountBtn"
+                    android:textColor="@color/secondary"
+                    android:textColorHighlight="#CDDC39"
+                    android:textColorLink="#E91E63"
+                    app:iconTint="#79FFFFFF"
+                    app:strokeColor="@color/secondary" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
