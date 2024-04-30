@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Beelangue</string>
+    <string name="loginmsg1">WELCOME BACK!</string>
+    <string name="loginmsg2">Let\'s Log you in</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="usernamePrompt">Enter your username here</string>
+    <string name="passwordPrompt">Enter password</string>
 </resources>
