@@ -1,12 +1,21 @@
 <resources>
     <string name="app_name">Beelangue</string>
+<!--    login page-->
     <string name="loginmsg1">WELCOME BACK!</string>
     <string name="loginmsg2">Let\'s Log you in</string>
+    <string name="loginBtn">Login</string>
+    <string name="createAccountBtn">Create Account</string>
+    <!--    input prompts-->
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="usernamePrompt">Enter your username here</string>
     <string name="passwordPrompt">Enter password</string>
-    <string name="loginBtn">Login</string>
-    <string name="createAccountBtn">Create Account</string>
+    <string name="email">Email</string>
+    <string name="emailPrompt">email@mail.com</string>
+    <!--    camera explore page-->
     <string name="cameraPrompt">Point your camera to an object \n It will show the word in chosen language</string>
+    <!--    create account page-->
+    <string name="signUp">Sign Up</string>
+    <string name="createAccountmsg1">Welcome to Belangue</string>
+    <string name="createAccountmsg2">Let\'s Sign you up</string>
 </resources>
