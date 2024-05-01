@@ -14,8 +14,10 @@
     <string name="emailPrompt">email@mail.com</string>
     <!--    camera explore page-->
     <string name="cameraPrompt">Point your camera to an object \n It will show the word in chosen language</string>
+    <string name="cameraButton">Capture Image</string>
     <!--    create account page-->
     <string name="signUp">Sign Up</string>
     <string name="createAccountmsg1">Welcome to Belangue</string>
     <string name="createAccountmsg2">Let\'s Sign you up</string>
+
 </resources>
