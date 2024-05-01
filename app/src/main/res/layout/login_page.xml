@@ -7,38 +7,47 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="50dp"
-        android:paddingLeft="50dp"
-        android:paddingTop="80dp"
-        android:paddingEnd="50dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@tools:sample/avatars"
-            app:srcCompat="@drawable/belangue_favicon_color" />
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="50dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/playfair"
-            android:text="@string/loginmsg1"
-            android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:src="@tools:sample/avatars"
+                app:srcCompat="@drawable/belangue_favicon_color" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poller_one"
-            android:text="@string/loginmsg2"
-            android:textSize="24sp" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:fontFamily="@font/playfair"
+                android:text="@string/loginmsg1"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poller_one"
+                android:text="@string/loginmsg2"
+                android:textSize="24sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:orientation="vertical">
 
             <TextView
@@ -63,6 +72,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
                 android:fontFamily="@font/playfair"
                 android:text="@string/password" />
 
@@ -77,29 +87,29 @@
                 android:textSize="14sp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="60dp"
                 android:orientation="vertical">
 
                 <Button
                     android:id="@+id/button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_background_color"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="11dp"
                     android:fontFamily="@font/poller_one"
-                    android:text="@string/loginBtn" />
+                    android:text="@string/loginBtn"
+                    app:cornerRadius="10dp" />
 
                 <Button
                     android:id="@+id/button2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/transparent_bg_bordered_button"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
                     android:fontFamily="@font/poller_one"
                     android:text="@string/createAccountBtn"
                     android:textColor="@color/secondary"
-                    android:textColorHighlight="#CDDC39"
-                    android:textColorLink="#E91E63"
-                    app:iconTint="#79FFFFFF"
+                    app:cornerRadius="10dp"
                     app:strokeColor="@color/secondary" />
             </LinearLayout>
         </LinearLayout>

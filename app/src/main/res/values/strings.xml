@@ -8,4 +8,5 @@
     <string name="passwordPrompt">Enter password</string>
     <string name="loginBtn">Login</string>
     <string name="createAccountBtn">Create Account</string>
+    <string name="cameraPrompt">Point your camera to an object \n It will show the word in chosen language</string>
 </resources>

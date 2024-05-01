@@ -16,11 +16,11 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Point your camera to an object \n It will show the word in chosen language"
         android:layout_marginTop="550dp"
-        android:textSize="20dp"
         android:fontFamily="@font/playfair"
-        android:textAlignment="center" />
+        android:text="@string/cameraPrompt"
+        android:textAlignment="center"
+        android:textSize="20dp" />
 
     <ImageButton
         android:id="@+id/capture_button"
