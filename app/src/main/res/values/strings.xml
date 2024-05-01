@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Beelangue</string>
+    <string name="learn">Learn</string>
+    <string name="explore">Explore</string>
 <!--    login page-->
     <string name="loginmsg1">WELCOME BACK!</string>
     <string name="loginmsg2">Let\'s Log you in</string>
@@ -18,4 +20,8 @@
     <string name="signUp">Sign Up</string>
     <string name="createAccountmsg1">Welcome to Belangue</string>
     <string name="createAccountmsg2">Let\'s Sign you up</string>
+<!--    pick journey page-->
+    <string name="pickTitle">Pick your journey</string>
+    <string name="learnDesc">Pick a stack and learn using provided flashcards</string>
+    <string name="exploreDesc">Use your camera to point and translate objects around you</string>
 </resources>
