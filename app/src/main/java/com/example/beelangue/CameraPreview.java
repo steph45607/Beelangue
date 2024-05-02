@@ -2,6 +2,7 @@ package com.example.beelangue;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,9 +22,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.objects.DetectedObject;
+import com.google.mlkit.vision.objects.ObjectDetection;
+import com.google.mlkit.vision.objects.ObjectDetector;
+import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CameraPreview extends AppCompatActivity {
@@ -82,7 +92,8 @@ public class CameraPreview extends AppCompatActivity {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                 String savedImagePath = outputFile.getAbsolutePath();
-                Toast.makeText(CameraPreview.this, "Image saved successfully " + savedImagePath, Toast.LENGTH_LONG).show();
+                detectObjects(savedImagePath);
+//                Toast.makeText(CameraPreview.this, "Image Saved at: " + savedImagePath, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -92,4 +103,69 @@ public class CameraPreview extends AppCompatActivity {
             }
         });
     }
+
+    private void detectObjects(String imagePath) {
+        try {
+            InputImage image = InputImage.fromFilePath(getApplicationContext(), Uri.fromFile(new File(imagePath)));
+            ObjectDetectorOptions options =
+                    new ObjectDetectorOptions.Builder()
+                            .setDetectorMode(ObjectDetectorOptions.STREAM_MODE)
+                            .enableClassification()
+                            .build();
+            ObjectDetector objectDetector = ObjectDetection.getClient(options);
+            objectDetector.process(image)
+                    .addOnSuccessListener(new OnSuccessListener<List<DetectedObject>>() {
+                        @Override
+                        public void onSuccess(List<DetectedObject> detectedObjects) {
+                            if (detectedObjects.isEmpty()) {
+                                Log.d("ObjectDetection", "No objects detected");
+                                Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
+                            } else {
+                                for (DetectedObject detectedObject : detectedObjects) {
+                                    List<DetectedObject.Label> labels = detectedObject.getLabels();
+                                    for (DetectedObject.Label label : labels) {
+                                        String labelText = label.getText();
+                                        Log.d("ObjectDetection", "Object Detected: " + labelText);
+                                        Toast.makeText(CameraPreview.this, "Object Detected: " + labelText, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
+                            Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } catch (IOException e) {
+            Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
+            e.printStackTrace();
+            Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (cameraProviderFuture != null && cameraProviderFuture.isDone()) {
+                    try {
+                        ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                        bindPreview(cameraProvider);
+                    } catch (ExecutionException | InterruptedException e) {
+                        Log.e("CameraX", "Error getting camera provider", e);
+                        Toast.makeText(CameraPreview.this, "Error starting camera", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
