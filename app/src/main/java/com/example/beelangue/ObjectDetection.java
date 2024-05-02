@@ -1,6 +1,7 @@
 package com.example.beelangue;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -10,18 +11,26 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.tensorflow.lite.Interpreter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -34,24 +43,23 @@ public class ObjectDetection extends AppCompatActivity {
 
     private static final int REQUEST_PERMISSION = 2;
 
-    private Interpreter interpreter;
+    private static final String MODEL_FILENAME = "your_model.tflite";
+    private static final String MODEL_REMOTE_PATH = "models/your_model.tflite";
+
+    private Interpreter tfliteInterpreter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_page);
 
-        try {
-            interpreter = new Interpreter(loadModelFile(), new Interpreter.Options());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION);
         } else {
             dispatchTakePictureIntent();
         }
+
+        downloadModelFromFirebase();
     }
 
     private ByteBuffer loadModelFile() throws IOException {
@@ -66,9 +74,23 @@ public class ObjectDetection extends AppCompatActivity {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            takePictureLauncher.launch(takePictureIntent);
         }
     }
+
+    private ActivityResultLauncher<Intent> takePictureLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                    // Perform object detection
+                    performObjectDetection(imageBitmap);
+                } else {
+                    Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -80,14 +102,45 @@ public class ObjectDetection extends AppCompatActivity {
     }
 
     private void performObjectDetection(Bitmap imageBitmap) {
+        if (tfliteInterpreter == null) {
+            Log.e("TFLite", "Interpreter is not initialized.");
+            return;
+        }
+
         ByteBuffer inputBuffer = convertBitmapToByteBuffer(imageBitmap);
 
-        float[][] outputArray = new float[1][NUM_CLASSES];
-        interpreter.run(inputBuffer, outputArray);
+        float[][] output = new float[1][NUM_CLASSES];
+        tfliteInterpreter.run(inputBuffer, output);
+    }
 
-        String detectedObjects = getDetectedObjects(outputArray);
+    private void downloadModelFromFirebase() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference modelRef = storage.getReference().child(MODEL_REMOTE_PATH);
 
-        translateToJapanese(detectedObjects);
+        try {
+            File localFile = new File(getCacheDir(), MODEL_FILENAME);
+            modelRef.getFile(localFile)
+                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            // Model downloaded successfully, initialize TensorFlow Lite interpreter
+                            try {
+                                tfliteInterpreter = new Interpreter(localFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle errors
+                            e.printStackTrace();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String getDetectedObjects(float[][] outputArray) {
