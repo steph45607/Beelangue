@@ -21,8 +21,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void navigateTo(Fragment fragmnet, boolean addToBackstack){
+    public void navigateTo(Fragment fragment, boolean addToBackstack){
         FragmentTransaction transaction =
                 getSupportFragmentManager()
                         .beginTransaction()

@@ -22,8 +22,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.objects.DetectedObject;
@@ -106,38 +104,34 @@ public class CameraPreview extends AppCompatActivity {
 
     private void detectObjects(String imagePath) {
         try {
+            Log.d("ObjectDetection", "Image Saved at: " + imagePath);
             InputImage image = InputImage.fromFilePath(getApplicationContext(), Uri.fromFile(new File(imagePath)));
             ObjectDetectorOptions options =
                     new ObjectDetectorOptions.Builder()
-                            .setDetectorMode(ObjectDetectorOptions.STREAM_MODE)
+                            .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
                             .enableClassification()
                             .build();
             ObjectDetector objectDetector = ObjectDetection.getClient(options);
             objectDetector.process(image)
-                    .addOnSuccessListener(new OnSuccessListener<List<DetectedObject>>() {
-                        @Override
-                        public void onSuccess(List<DetectedObject> detectedObjects) {
-                            if (detectedObjects.isEmpty()) {
-                                Log.d("ObjectDetection", "No objects detected");
-                                Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
-                            } else {
-                                for (DetectedObject detectedObject : detectedObjects) {
-                                    List<DetectedObject.Label> labels = detectedObject.getLabels();
-                                    for (DetectedObject.Label label : labels) {
-                                        String labelText = label.getText();
-                                        Log.d("ObjectDetection", "Object Detected: " + labelText);
-                                        Toast.makeText(CameraPreview.this, "Object Detected: " + labelText, Toast.LENGTH_SHORT).show();
-                                    }
+                    .addOnSuccessListener(detectedObjects -> {
+                        if (detectedObjects.isEmpty()) {
+                            Log.d("ObjectDetection", "No objects detected");
+                            Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
+                        } else {
+                            for (DetectedObject detectedObject : detectedObjects) {
+                                List<DetectedObject.Label> labels = detectedObject.getLabels();
+                                for (DetectedObject.Label label : labels) {
+                                    String labelText = label.getText();
+                                    float confidence = label.getConfidence();
+                                    Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
+                                    Toast.makeText(CameraPreview.this, "Object Detected: " + labelText, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
-                            Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
-                        }
+                    .addOnFailureListener(e -> {
+                        Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
+                        Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
                     });
         } catch (IOException e) {
             Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
@@ -145,8 +139,6 @@ public class CameraPreview extends AppCompatActivity {
             Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -167,5 +159,4 @@ public class CameraPreview extends AppCompatActivity {
             }
         }
     }
-
 }
