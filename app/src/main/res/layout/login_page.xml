@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    tools:context=".LoginFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
+<!--logo and welcome message-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,14 +21,14 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 app:srcCompat="@drawable/belangue_favicon_color" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
@@ -35,23 +37,23 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poller_one"
                 android:text="@string/loginmsg2"
                 android:textSize="24sp" />
         </LinearLayout>
-
+<!--input field for login-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:orientation="vertical">
-
+<!--username-->
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/playfair"
@@ -59,7 +61,7 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/editTextText2"
+                android:id="@+id/editUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -67,7 +69,7 @@
                 android:hint="@string/usernamePrompt"
                 android:inputType="text"
                 android:textSize="14sp" />
-
+<!--password-->
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
@@ -77,7 +79,7 @@
                 android:text="@string/password" />
 
             <EditText
-                android:id="@+id/editTextTextPassword"
+                android:id="@+id/editPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -85,36 +87,38 @@
                 android:hint="@string/passwordPrompt"
                 android:inputType="textPassword"
                 android:textSize="14sp" />
-
+<!--buttons-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="60dp"
                 android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/button"
+<!--login button-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/loginBtn"
                     android:layout_width="200dp"
                     android:layout_height="40dp"
                     android:layout_marginBottom="11dp"
                     android:fontFamily="@font/poller_one"
                     android:text="@string/loginBtn"
                     app:cornerRadius="10dp" />
-
-                <Button
-                    android:id="@+id/button2"
+<!--create account button-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/createAccountBtn"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="200dp"
                     android:layout_height="40dp"
-                    android:backgroundTint="@color/transparent"
                     android:fontFamily="@font/poller_one"
                     android:text="@string/createAccountBtn"
                     android:textColor="@color/secondary"
+                    app:backgroundTint="@color/background"
                     app:cornerRadius="10dp"
-                    app:strokeColor="@color/secondary"
-                    app:strokeWidth="2dp" />
+                    app:iconTint="@color/transparent"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="4dp" />
             </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

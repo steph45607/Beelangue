@@ -25,4 +25,6 @@
     <string name="pickTitle">Pick your journey</string>
     <string name="learnDesc">Pick a stack and learn using provided flashcards</string>
     <string name="exploreDesc">Use your camera to point and translate objects around you</string>
+<!--    error messages -->
+    <string name="password_error">Sorry, password error or invalid</string>
 </resources>
