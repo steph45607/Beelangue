@@ -7,7 +7,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class CreateAccountPage extends AppCompatActivity {
+public class CreateAccountActivity extends AppCompatActivity {
 
     Button loginButton ;
 
@@ -21,7 +21,7 @@ public class CreateAccountPage extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(CreateAccountPage.this, LoginPage.class);
+                        Intent i = new Intent(CreateAccountActivity.this, LoginActivity.class);
                         startActivity(i);
                     }
                 }
