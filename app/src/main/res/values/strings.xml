@@ -27,4 +27,8 @@
     <string name="exploreDesc">Use your camera to point and translate objects around you</string>
 <!--    error messages -->
     <string name="password_error">Sorry, password error or invalid</string>
+<!--    Main Page-->
+    <string name="heading"> Pick A Language </string>
+    <string name="japan"> Japanese </string>
+    <string name="indo"> Indonesian </string>
 </resources>
