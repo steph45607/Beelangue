@@ -7,6 +7,8 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseApp;
+
 public class LearnExploreActivity extends AppCompatActivity {
 
     ImageButton backButton ;
@@ -15,6 +17,7 @@ public class LearnExploreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.learn_explore);
+        FirebaseApp.initializeApp(this);
 
         backButton = findViewById(R.id.backBtn);
         backButton.setOnClickListener(

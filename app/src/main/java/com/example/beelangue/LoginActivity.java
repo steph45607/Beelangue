@@ -7,6 +7,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseApp;
+
 public class LoginActivity extends AppCompatActivity {
 
     Button createAccountBtn, loginButton  ;
@@ -15,8 +17,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
+        FirebaseApp.initializeApp(this);
 
-        createAccountBtn = findViewById(R.id.createBtn);
+        createAccountBtn = findViewById(R.id.create_button);
         createAccountBtn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -26,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
         );
-        createAccountBtn = findViewById(R.id.loginBtn);
+        createAccountBtn = findViewById(R.id.login_button);
         createAccountBtn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override

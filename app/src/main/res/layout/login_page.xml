@@ -96,7 +96,7 @@
                 android:orientation="vertical">
 <!--login button-->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/loginBtn"
+                    android:id="@+id/login_button"
                     android:layout_width="200dp"
                     android:layout_height="40dp"
                     android:layout_marginBottom="11dp"
@@ -105,7 +105,7 @@
                     app:cornerRadius="10dp" />
 <!--create account button-->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/createBtn"
+                    android:id="@+id/create_button"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="200dp"
                     android:layout_height="40dp"
