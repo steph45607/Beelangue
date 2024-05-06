@@ -1,12 +1,14 @@
 package com.example.beelangue;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,11 +39,23 @@ import java.util.concurrent.ExecutionException;
 public class CameraPreview extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ImageCapture imageCapture;
+    ImageButton backBtn;
+    TextView object;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_page);
+
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(CameraPreview.this, LearnExploreActivity.class);
+                startActivity((i));
+            }
+        });
+
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
@@ -103,6 +117,7 @@ public class CameraPreview extends AppCompatActivity {
     }
 
     private void detectObjects(String imagePath) {
+        object = findViewById(R.id.objectDetected);
         try {
             Log.d("ObjectDetection", "Image Saved at: " + imagePath);
             InputImage image = InputImage.fromFilePath(getApplicationContext(), Uri.fromFile(new File(imagePath)));
@@ -125,6 +140,7 @@ public class CameraPreview extends AppCompatActivity {
                                     float confidence = label.getConfidence();
                                     Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
                                     Toast.makeText(CameraPreview.this, "Object Detected: " + labelText, Toast.LENGTH_SHORT).show();
+                                    object.setText(labelText);
                                 }
                             }
                         }
