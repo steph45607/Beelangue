@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-database:21.0.0")
     val cameraxVersion = "1.3.3";
     val fragment_version = "1.7.0"
     // Java language implementation

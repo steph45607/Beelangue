@@ -17,6 +17,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class CreateAccountActivity extends AppCompatActivity {
 
     Button loginButton, createButton ;
@@ -62,9 +64,19 @@ public class CreateAccountActivity extends AppCompatActivity {
         username = usernameText.getText().toString();
         password = passwordText.getText().toString();
 
+        // Email validation regex
+        String emailRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(),
                             "Please enter email!!",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        if (!email.matches(emailRegex)) {
+            Toast.makeText(getApplicationContext(),
+                            "Please enter a valid email address!!",
                             Toast.LENGTH_LONG)
                     .show();
             return;
@@ -82,34 +94,35 @@ public class CreateAccountActivity extends AppCompatActivity {
                     .show();
             return;
         }
-        mAuth
-                .createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // Registration successful
                             Toast.makeText(getApplicationContext(),
                                             "Registration successful!",
                                             Toast.LENGTH_LONG)
                                     .show();
 
-                            // if the user created intent to login activity
-                            Intent intent
-                                    = new Intent(CreateAccountActivity.this,
-                                    LearnExploreActivity.class);
+                            Intent intent = new Intent(CreateAccountActivity.this, LearnExploreActivity.class);
                             startActivity(intent);
-                        }
-                        else {
-                            // Registration failed
-                            Toast.makeText(
-                                            getApplicationContext(),
-                                            "Registration failed!!"
-                                                    + " Please try again later",
-                                            Toast.LENGTH_LONG)
-                                    .show();
-
+                        } else {
+                            // Check if email is already in use
+                            String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
+                            assert errorMessage != null;
+                            if (errorMessage.contains("email address is already in use")) {
+                                Toast.makeText(getApplicationContext(),
+                                                "Email is already in use",
+                                                Toast.LENGTH_LONG)
+                                        .show();
+                            } else {
+                                // Registration failed
+                                Toast.makeText(getApplicationContext(),
+                                                "Registration failed!! Please try again later",
+                                                Toast.LENGTH_LONG)
+                                        .show();
+                            }
                         }
                     }
                 });
