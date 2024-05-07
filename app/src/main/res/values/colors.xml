@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="background">#FFFFFFFF</color>
+    <color name="background">#FFDDCB</color>
     <color name="primary">#093D65</color>
     <color name="secondary">#F98E54</color>
     <color name="transparent">#0000ffff</color>
+
+    <color name="night_background">#292929</color>
+    <color name="night_primary">#96D1FF</color>
+    <color name="night_secondary">#FFB893</color>
+    <color name="white">#FFFFFF</color>
 </resources>

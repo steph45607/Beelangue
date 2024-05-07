@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     tools:context=".LoginActivity">
 
     <LinearLayout
@@ -67,7 +66,7 @@
                 android:ems="10"
                 android:fontFamily="@font/playfair"
                 android:hint="@string/emailPrompt"
-                android:inputType="text"
+                android:inputType="textEmailAddress"
                 android:textSize="14sp" />
 <!--password-->
             <TextView
@@ -106,17 +105,16 @@
 <!--create account button-->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/create_button"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="200dp"
                     android:layout_height="40dp"
                     android:fontFamily="@font/poller_one"
                     android:text="@string/createAccountBtn"
                     android:textColor="@color/secondary"
-                    app:backgroundTint="@color/background"
+                    app:backgroundTint="@color/transparent"
                     app:cornerRadius="10dp"
                     app:iconTint="@color/transparent"
-                    app:strokeColor="@color/primary"
-                    app:strokeWidth="4dp" />
+                    app:strokeColor="@color/secondary"
+                    app:strokeWidth="2dp" />
             </LinearLayout>
         </LinearLayout>
 

@@ -11,7 +11,7 @@ import com.google.firebase.FirebaseApp;
 
 public class LearnExploreActivity extends AppCompatActivity {
 
-    ImageButton backButton ;
+    ImageButton backButton, exploreButton ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,17 @@ public class LearnExploreActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(LearnExploreActivity.this, LoginActivity.class);
+                        startActivity(i);
+                    }
+                }
+        );
+
+        exploreButton = findViewById(R.id.exploreBtn);
+        exploreButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(LearnExploreActivity.this, CameraPreview.class);
                         startActivity(i);
                     }
                 }
