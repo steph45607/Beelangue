@@ -11,7 +11,7 @@ import com.google.firebase.FirebaseApp;
 
 public class LearnExploreActivity extends AppCompatActivity {
 
-    ImageButton backButton, exploreButton ;
+    ImageButton backButton, exploreButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

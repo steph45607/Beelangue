@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="600dp"
         android:fontFamily="@font/playfair"
-        android:textColor="@color/black"
+        android:textColor="@color/primary"
         android:text="@string/cameraPrompt"
         android:textAlignment="center"
         android:textSize="20sp" />
