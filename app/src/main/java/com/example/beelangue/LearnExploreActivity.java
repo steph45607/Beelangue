@@ -24,7 +24,7 @@ public class LearnExploreActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(LearnExploreActivity.this, LoginActivity.class);
+                        Intent i = new Intent(LearnExploreActivity.this, MainActivity.class);
                         startActivity(i);
                     }
                 }

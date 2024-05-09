@@ -31,6 +31,8 @@
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".LearnExploreActivity" />
         <activity android:name=".CameraPreview" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

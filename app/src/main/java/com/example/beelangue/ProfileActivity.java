@@ -8,37 +8,36 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
+    ImageButton backBtn;
+    Button logoutBtn;
 
-    Button profileBtn;
-    ImageButton flagBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_page);
+        setContentView(R.layout.profile_page);
 
-        profileBtn = findViewById(R.id.profile);
-        profileBtn.setOnClickListener(
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this, ProfileActivity.class);
+                        Intent i = new Intent(ProfileActivity.this, MainActivity.class);
+                        startActivity(i);
+                    }
+                }
+        );
+        logoutBtn = findViewById(R.id.logout);
+
+        logoutBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
                         startActivity(i);
                     }
                 }
         );
 
-        flagBtn = findViewById(R.id.japanese);
-        flagBtn.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
-                        startActivity(i);
-                    }
-                }
-        );
     }
-
-
 }

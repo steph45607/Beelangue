@@ -17,7 +17,7 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/backButton"
                 android:layout_width="50dp"
                 android:layout_height="80dp"
                 android:backgroundTint="@color/transparent"
@@ -149,6 +149,7 @@
                 app:iconTint="@color/black"
                 />
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Log Out"
