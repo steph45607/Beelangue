@@ -8,14 +8,19 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class ProfileActivity extends AppCompatActivity {
     ImageButton backBtn;
     Button logoutBtn;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_page);
+
+        mAuth = FirebaseAuth.getInstance();
 
         backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(
@@ -33,8 +38,11 @@ public class ProfileActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mAuth.signOut();
                         Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
                         startActivity(i);
+                        finish();
+                        finishAffinity();
                     }
                 }
         );
