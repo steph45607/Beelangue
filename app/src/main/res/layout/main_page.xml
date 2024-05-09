@@ -6,16 +6,13 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="30dp"
             >
 
@@ -33,25 +30,27 @@
                 android:layout_weight="1"
                 android:text="@string/heading"
                 android:fontFamily="@font/poller_one"
-                android:textAlignment="viewStart"
+                android:gravity="center_vertical|center_horizontal"
                 />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/person"
                 android:background="@color/transparent"
-                app:iconTint="@color/black"
+                app:icon="@drawable/person"
                 app:iconSize="30dp"
                 />
         </LinearLayout>
 
         <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            >
 
             <TableRow
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent" >
 
                 <LinearLayout
@@ -61,7 +60,7 @@
 
                     <ImageButton
                         android:id="@+id/japanese"
-                        android:layout_width="200dp"
+                        android:layout_width="180dp"
                         android:layout_height="100dp"
                         android:backgroundTint="@color/transparent"
                         android:scaleType="centerCrop"
@@ -83,12 +82,11 @@
 
                     <ImageButton
                         android:id="@+id/indonesian"
-                        android:layout_width="200dp"
-                        android:layout_height="100dp"
+                        android:layout_width="180dp"
+                        android:layout_height="104dp"
                         android:backgroundTint="@color/transparent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/flag_of_japan"
-                        />
+                        android:src="@drawable/flag_of_japan" />
 
                     <TextView
                         android:id="@+id/textView17"
@@ -109,7 +107,7 @@
                     android:orientation="vertical">
 
                     <ImageButton
-                        android:layout_width="200dp"
+                        android:layout_width="180dp"
                         android:layout_height="100dp"
                         android:backgroundTint="@color/transparent"
                         android:scaleType="centerCrop"
