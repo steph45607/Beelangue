@@ -134,6 +134,7 @@
                 app:iconTint="@color/black"
                 />
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Delete Account"
