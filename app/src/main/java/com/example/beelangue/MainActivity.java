@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,22 +22,47 @@ public class MainActivity extends AppCompatActivity {
     ImageButton flagBtn;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     public void getLanguages(){
+        Log.d("confirm", "running i am running");
+//        String name = db.collection("language").get().toString();
+//        Log.d("langID", name);
         db.collection("language")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot doc: task.getResult()){
-                                Log.d("test", doc.getId() + " =>" + doc.getData());
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot doc: queryDocumentSnapshots){
+//                                String documentID = doc.getID
+                                Log.d("koesmanto", doc.getId() + " =>" + doc.getData());
                             }
                         }
-                        else{
-                            Log.w("test", "Error getting documents", task.getException());
-                        }
+//                        else{
+//                            Log.w("koesmanto", "Error getting documents", task.getException());
+//                        }
+//                    }
+
+//                    @Override
+//                    public void onSuccess(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            for(QueryDocumentSnapshot doc: task.getResult()){
+//                                Log.d("koesmanto", doc.getId() + " =>" + doc.getData());
+//                            }
+//                        }
+//                        else{
+//                            Log.w("koesmanto", "Error getting documents", task.getException());
+//                        }
+//                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("koesmanto", "error bla bla", e);
                     }
-                });
+                })
+        ;
+        Log.d("staniswinata", "ended");
     }
 
     @Override
