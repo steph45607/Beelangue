@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/transparent"
-                android:src="@drawable/camera" />
+                android:src="@drawable/cameralogo" />
 
             <TextView
                 android:id="@+id/textView10"

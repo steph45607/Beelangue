@@ -105,7 +105,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG)
                                     .show();
 
-                            Intent intent = new Intent(CreateAccountActivity.this, LearnExploreActivity.class);
+                            Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else {
                             // Check if email is already in use
