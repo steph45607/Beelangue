@@ -14,15 +14,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="35dp"
+            android:layout_marginTop="30dp"
             android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/backButton"
                 android:layout_width="50dp"
-                android:layout_height="80dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
                 android:backgroundTint="@color/transparent"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/back" />
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

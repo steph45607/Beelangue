@@ -51,6 +51,11 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser();
             }
         });
+//        loginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                throw new RuntimeException("test crash");
+//            }});
     }
 
     private void loginUser() {

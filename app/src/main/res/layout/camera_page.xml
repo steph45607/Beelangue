@@ -10,7 +10,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="@color/transparent"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/back" />
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="150dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="45dp"
         android:fontFamily="@font/poller_one"
         android:text="Explore Page"
         android:textColor="@color/secondary" />
