@@ -33,7 +33,6 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp" >
-
     </androidx.camera.view.PreviewView>
 
     <TextView
@@ -62,8 +61,12 @@
         android:id="@+id/objectDetected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="150dp"
-        android:layout_marginTop="550dp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="550dp"
+        android:background="@color/cardview_light_background"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp" />
 
 
 </RelativeLayout>

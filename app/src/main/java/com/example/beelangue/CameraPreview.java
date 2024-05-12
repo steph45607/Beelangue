@@ -22,17 +22,20 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.objects.DetectedObject;
-import com.google.mlkit.vision.objects.ObjectDetection;
-import com.google.mlkit.vision.objects.ObjectDetector;
-import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CameraPreview extends AppCompatActivity {
@@ -121,31 +124,50 @@ public class CameraPreview extends AppCompatActivity {
 
     private void detectObjects(String imagePath) {
         object = findViewById(R.id.objectDetected);
+
+        float radius = getResources().getDimension(R.dimen.corner_radius);
+
+        ShapeAppearanceModel shapeAppearanceModel = new ShapeAppearanceModel()
+                .toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED,radius)
+                .build();
+
+        MaterialShapeDrawable shapeDrawable = new MaterialShapeDrawable(shapeAppearanceModel);
+        shapeDrawable.setFillColor(ContextCompat.getColorStateList(this, R.color.white));
+        ViewCompat.setBackground(object,shapeDrawable);
+
         try {
             Log.d("ObjectDetection", "Image Saved at: " + imagePath);
             InputImage image = InputImage.fromFilePath(getApplicationContext(), Uri.fromFile(new File(imagePath)));
-            ObjectDetectorOptions options =
-                    new ObjectDetectorOptions.Builder()
-                            .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
-                            .enableClassification()
+
+            ImageLabelerOptions options =
+                    new ImageLabelerOptions.Builder()
+                            .setConfidenceThreshold(0.8f)
                             .build();
-            ObjectDetector objectDetector = ObjectDetection.getClient(options);
-            objectDetector.process(image)
-                    .addOnSuccessListener(detectedObjects -> {
-                        if (detectedObjects.isEmpty()) {
+
+            // Create an ImageLabeler
+            ImageLabeler labeler = ImageLabeling.getClient(options);
+
+            labeler.process(image)
+                    .addOnSuccessListener(labels -> {
+                        if (labels.isEmpty()) {
                             Log.d("ObjectDetection", "No objects detected");
                             Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
                         } else {
-                            for (DetectedObject detectedObject : detectedObjects) {
-                                List<DetectedObject.Label> labels = detectedObject.getLabels();
-                                for (DetectedObject.Label label : labels) {
-                                    String labelText = label.getText();
-                                    float confidence = label.getConfidence();
-                                    Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
-                                    Toast.makeText(CameraPreview.this, "Object Detected: " + labelText, Toast.LENGTH_SHORT).show();
-                                    object.setText(labelText);
+                            StringBuilder labelTextBuilder = new StringBuilder();
+                            int totalLabels = labels.size();
+                            for (int i = 0; i < totalLabels; i++) {
+                                ImageLabel label = labels.get(i);
+                                String labelText = label.getText();
+                                float confidence = label.getConfidence();
+                                Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
+                                labelTextBuilder.append(labelText);
+                                if (i < totalLabels - 1) {
+                                    labelTextBuilder.append(", ");
                                 }
                             }
+                            String allLabels = labelTextBuilder.toString().trim();
+                            object.setText(allLabels);
                         }
                     })
                     .addOnFailureListener(e -> {
