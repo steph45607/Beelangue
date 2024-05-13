@@ -24,10 +24,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.shape.CornerFamily;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabel;
 import com.google.mlkit.vision.label.ImageLabeler;
@@ -36,6 +43,7 @@ import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CameraPreview extends AppCompatActivity {
@@ -129,12 +137,12 @@ public class CameraPreview extends AppCompatActivity {
 
         ShapeAppearanceModel shapeAppearanceModel = new ShapeAppearanceModel()
                 .toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED,radius)
+                .setAllCorners(CornerFamily.ROUNDED, radius)
                 .build();
 
         MaterialShapeDrawable shapeDrawable = new MaterialShapeDrawable(shapeAppearanceModel);
         shapeDrawable.setFillColor(ContextCompat.getColorStateList(this, R.color.white));
-        ViewCompat.setBackground(object,shapeDrawable);
+        ViewCompat.setBackground(object, shapeDrawable);
 
         try {
             Log.d("ObjectDetection", "Image Saved at: " + imagePath);
@@ -145,34 +153,77 @@ public class CameraPreview extends AppCompatActivity {
                             .setConfidenceThreshold(0.8f)
                             .build();
 
-            // Create an ImageLabeler
-            ImageLabeler labeler = ImageLabeling.getClient(options);
+            TranslatorOptions translatorOptions = new TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.INDONESIAN)
+                    .build();
 
-            labeler.process(image)
-                    .addOnSuccessListener(labels -> {
-                        if (labels.isEmpty()) {
-                            Log.d("ObjectDetection", "No objects detected");
-                            Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
-                        } else {
-                            StringBuilder labelTextBuilder = new StringBuilder();
-                            int totalLabels = labels.size();
-                            for (int i = 0; i < totalLabels; i++) {
-                                ImageLabel label = labels.get(i);
-                                String labelText = label.getText();
-                                float confidence = label.getConfidence();
-                                Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
-                                labelTextBuilder.append(labelText);
-                                if (i < totalLabels - 1) {
-                                    labelTextBuilder.append(", ");
-                                }
-                            }
-                            String allLabels = labelTextBuilder.toString().trim();
-                            object.setText(allLabels);
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi() // Optional: Require WiFi for download
+                    .build();
+
+            Translator englishindoTranslator = Translation.getClient(translatorOptions);
+
+            // Check if the model is downloaded
+            englishindoTranslator.downloadModelIfNeeded(conditions)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            // Model downloaded, proceed with translation
+                            ImageLabeler labeler = ImageLabeling.getClient(options);
+
+                            labeler.process(image)
+                                    .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+                                        @Override
+                                        public void onSuccess(List<ImageLabel> labels) {
+                                            if (labels.isEmpty()) {
+                                                Log.d("ObjectDetection", "No objects detected");
+                                                Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                StringBuilder labelTextBuilder = new StringBuilder();
+                                                int totalLabels = labels.size();
+                                                for (int i = 0; i < totalLabels; i++) {
+                                                    ImageLabel label = labels.get(i);
+                                                    String labelText = label.getText();
+                                                    float confidence = label.getConfidence();
+                                                    Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
+                                                    labelTextBuilder.append(labelText);
+                                                    if (i < totalLabels - 1) {
+                                                        labelTextBuilder.append(", ");
+                                                    }
+                                                }
+                                                String allLabels = labelTextBuilder.toString().trim();
+                                                englishindoTranslator.translate(allLabels)
+                                                        .addOnSuccessListener(new OnSuccessListener<String>() {
+                                                            @Override
+                                                            public void onSuccess(String translatedText) {
+                                                                object.setText(String.format("%s (%s)", allLabels, translatedText));
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception exception) {
+                                                                Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
+                                            Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     })
-                    .addOnFailureListener(e -> {
-                        Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
-                        Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.e("ObjectDetection", "Model download failed: " + exception.getMessage());
+                            // Handle model download failure (e.g., display error message)
+                        }
                     });
         } catch (IOException e) {
             Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
@@ -181,7 +232,7 @@ public class CameraPreview extends AppCompatActivity {
         }
     }
 
-    @Override
+            @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 101) {

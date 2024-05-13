@@ -70,6 +70,7 @@ dependencies {
     implementation("com.google.firebase:firebase-ml-model-interpreter:22.0.4")
     implementation("com.google.mlkit:object-detection:17.0.1")
     implementation("com.google.mlkit:image-labeling:17.0.8")
+    implementation("com.google.mlkit:translate:17.0.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
