@@ -36,11 +36,12 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/loginMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poller_one"
                 android:text="@string/loginmsg2"
+                android:fontFamily="@font/poller_one"
+
                 android:textSize="24sp" />
         </LinearLayout>
 <!--input field for login-->

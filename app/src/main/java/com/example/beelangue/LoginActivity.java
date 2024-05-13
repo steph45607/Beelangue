@@ -51,11 +51,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser();
             }
         });
-//        loginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                throw new RuntimeException("test crash");
-//            }});
     }
 
     private void loginUser() {
@@ -76,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         System.out.print("hello");
-                        Log.d("LoginActivity", "signInWithEmailAndPassword: " + (task.isSuccessful() ? "success" : "failure"));
+                        Log.d("koesmanto", "signInWithEmailAndPassword: " + (task.isSuccessful() ? "success" : "failure"));
                         if (task.isSuccessful()) {
                             // Login successful
                             Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();

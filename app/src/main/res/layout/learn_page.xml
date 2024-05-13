@@ -32,9 +32,8 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/poller_one"
                 android:text="@string/learn"
-                android:textColor="@color/secondary"
-                android:textSize="18sp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="18sp" />
 
             <ImageButton
                 android:id="@+id/imageButton6"
