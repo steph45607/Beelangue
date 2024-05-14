@@ -66,7 +66,6 @@ public class CameraPreview extends AppCompatActivity {
             }
         });
 
-
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
         cameraProviderFuture.addListener(() -> {
