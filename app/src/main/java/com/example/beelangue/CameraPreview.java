@@ -22,13 +22,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.shape.CornerFamily;
-import com.google.android.material.shape.MaterialShapeDrawable;
-import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.common.model.DownloadConditions;
 import com.google.mlkit.nl.translate.TranslateLanguage;
@@ -133,15 +129,6 @@ public class CameraPreview extends AppCompatActivity {
         object = findViewById(R.id.objectDetected);
 
         float radius = getResources().getDimension(R.dimen.corner_radius);
-
-        ShapeAppearanceModel shapeAppearanceModel = new ShapeAppearanceModel()
-                .toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED, radius)
-                .build();
-
-        MaterialShapeDrawable shapeDrawable = new MaterialShapeDrawable(shapeAppearanceModel);
-        shapeDrawable.setFillColor(ContextCompat.getColorStateList(this, R.color.white));
-        ViewCompat.setBackground(object, shapeDrawable);
 
         try {
             Log.d("ObjectDetection", "Image Saved at: " + imagePath);

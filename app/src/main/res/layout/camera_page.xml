@@ -32,7 +32,7 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp"
-        app:cardCornerRadius="10dp"> <!-- Adjust the corner radius as needed -->
+        app:cardCornerRadius="10dp">
 
         <androidx.camera.view.PreviewView
             android:id="@+id/previewView"
@@ -63,16 +63,26 @@
         android:src="@drawable/ic_camera_download"
         android:contentDescription="@string/cameraButton" />
 
+    <!-- res/layout/camera_page.xml -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="550dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/primary"
+        app:cardElevation="0dp">
+
     <TextView
         android:id="@+id/objectDetected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="550dp"
-        android:background="@color/cardview_light_background"
+        android:background="@color/white"
         android:gravity="center"
-        android:layout_centerHorizontal="true"
         android:padding="10dp" />
+</androidx.cardview.widget.CardView>
 
 
-</RelativeLayout>
+
+    </RelativeLayout>
