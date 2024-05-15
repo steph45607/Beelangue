@@ -17,8 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +29,7 @@ import java.util.Objects;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    Button loginButton, createButton ;
+    Button loginButton, createButton;
     EditText emailText, passwordText, usernameText;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -57,16 +60,16 @@ public class CreateAccountActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.editPassword);
         usernameText = findViewById(R.id.editUsername);
 
-        createButton.setOnClickListener(new View.OnClickListener(){
+        createButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 registerNewUser();
             }
         });
 
     }
 
-    private void registerNewUser(){
+    private void registerNewUser() {
         String email, password, username;
         email = emailText.getText().toString();
         username = usernameText.getText().toString();
@@ -95,13 +98,51 @@ public class CreateAccountActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG)
                     .show();
             return;
-        }if (TextUtils.isEmpty(username)) {
+        }
+        if (TextUtils.isEmpty(username)) {
             Toast.makeText(getApplicationContext(),
                             "Please enter username!!",
                             Toast.LENGTH_LONG)
                     .show();
             return;
         }
+        if (username.length() < 3) {
+            Toast.makeText(getApplicationContext(),
+                            "Username must be at least 3 characters long!!",
+                            Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        // Check if the username already exists
+        mDatabase.child("users").orderByChild("username").equalTo(username)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.d("koesmanto", "onDataChange called");
+                        if (snapshot.exists()) {
+                            Log.d("koesmanto", "Username already exists: " + username);
+                            Toast.makeText(getApplicationContext(),
+                                            "Username already exists!!",
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                        } else {
+                            createFirebaseUser(email, password, username);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("koesmanto", "Database error: " + error.getMessage());
+                        Toast.makeText(getApplicationContext(),
+                                        "Database error. Please try again later",
+                                        Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+    }
+
+    private void createFirebaseUser(String email, String password, String username) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
