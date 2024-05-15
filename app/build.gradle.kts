@@ -46,16 +46,13 @@ dependencies {
     val fragment_version = "1.7.0"
     // Java language implementation
     implementation("androidx.fragment:fragment:$fragment_version")
-    // Kotlin
-    implementation("androidx.fragment:fragment-ktx:$fragment_version")
-//    implementation("com.google.firebase:firebase-analytics:22.0.0")
-//    implementation("com.google.firebase:firebase-core")
-//    implementation("com.google.firebase:firebase-firestore:25.0.0"){
-//        exclude(group = "com.google.api.grpc", module = "proto-google-common-protos")
-//        exclude(group = "com.google.firebase", module = "protolite-well-known-types")
-//        exclude(group = "com.google.protobuf", module = "protobuf-java")
-//        exclude(group = "com.google.protobuf", module = "protobuf-javalite")
-//    }
+
+//    implementation("com.android.support:recyclerview-v7")
+//    implementation("com.android.support:cardview-v7")
+
+//    implementation("androidx.recyclerview.widget")
+//    implementation("androidx.cardview.widget")
+
     implementation("com.google.firebase:firebase-crashlytics:19.0.0")
     implementation("com.google.firebase:firebase-analytics:22.0.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")
