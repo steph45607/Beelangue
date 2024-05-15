@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,14 +18,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
     ImageButton backBtn;
     Button logoutBtn;
     Button deleteAccountBtn;
     FirebaseAuth mAuth;
+    TextView usernameTextView;
 
     private DatabaseReference mDatabase;
 
@@ -48,6 +54,9 @@ public class ProfileActivity extends AppCompatActivity {
                 }
         );
 
+        usernameTextView = findViewById(R.id.textView12);
+        setUsername();
+
         deleteAccountBtn = findViewById(R.id.deleteAccount);
         deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +79,31 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void setUsername() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            mDatabase.child("users").child(userId).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String username = dataSnapshot.getValue(String.class);
+                        if (username != null) {
+                            usernameTextView.setText(username);
+                        }
+                    } else {
+                        Log.e("ProfileActivity", "Username does not exist.");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("ProfileActivity", "Failed to read username.", databaseError.toException());
+                }
+            });
+        }
     }
 
     // send alert for deleting
