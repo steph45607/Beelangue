@@ -18,6 +18,11 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -63,11 +68,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String email = emailText.getText().toString();
+        String input = emailText.getText().toString();
         String password = passwordText.getText().toString();
 
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Please enter email!", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(input)) {
+            Toast.makeText(getApplicationContext(), "Please enter email or username!", Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(password)) {
@@ -75,11 +80,25 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        if (isEmail(input)) {
+            // Login with email
+            signInWithEmail(input, password);
+        } else {
+            // Login with username
+            signInWithUsername(input, password);
+        }
+    }
+
+    private boolean isEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        return email.matches(emailPattern);
+    }
+
+    private void signInWithEmail(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        System.out.print("hello");
                         Log.d("koesmanto", "signInWithEmailAndPassword: " + (task.isSuccessful() ? "success" : "failure"));
                         if (task.isSuccessful()) {
                             // Login successful
@@ -88,9 +107,35 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                         } else {
                             // Login failed
-                            Toast.makeText(getApplicationContext(), "Login failed! Please check your credentials.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Login failed! Please check your email address and password!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+    }
+
+    private void signInWithUsername(String username, String password) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app");
+        DatabaseReference ref = database.getReference("users");
+
+        ref.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String email = snapshot.child("email").getValue(String.class);
+                        signInWithEmail(email, password);
+                        break;
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Login failed! Please check your username and password!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("koesmanto", "Failed sign in with username", databaseError.toException());
+                Toast.makeText(getApplicationContext(), "Database error!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

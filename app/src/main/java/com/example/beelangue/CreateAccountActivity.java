@@ -150,7 +150,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Registration successful
                             String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-                            saveUsername(userId, username);
+                            saveData(userId, username, email);
 
                             Toast.makeText(getApplicationContext(),
                                             "Registration successful!",
@@ -182,21 +182,22 @@ public class CreateAccountActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveUsername(String userId, String username) {
-        Log.d("koesmanto", "Attempting to save username for user: " + userId);
+    private void saveData(String userId, String username, String email) {
+        Log.d("koesmanto", "Attempting to save details for user: " + userId);
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("username", username);
+        userMap.put("email", email);
 
         mDatabase.child("users").child(userId).setValue(userMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d("koesmanto", "Username saved successfully for UID: " + userId);
+                            Log.d("koesmanto", "User details saved successfully for UID: " + userId);
                         } else {
                             // Failed
                             Toast.makeText(getApplicationContext(),
-                                            "Failed to save username",
+                                            "Failed to save user details",
                                             Toast.LENGTH_LONG)
                                     .show();
                         }

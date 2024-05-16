@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:fontFamily="@font/playfair"
+                android:fontFamily="@font/librebaskervilleregular"
                 android:text="@string/email" />
 
             <EditText
@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:fontFamily="@font/playfair"
+                android:fontFamily="@font/librebaskervilleregular"
                 android:hint="@string/emailPrompt"
                 android:inputType="textEmailAddress"
                 android:textSize="14sp" />
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:fontFamily="@font/playfair"
+                android:fontFamily="@font/librebaskervilleregular"
                 android:text="@string/password" />
 
             <EditText
@@ -102,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:fontFamily="@font/playfair"
+                android:fontFamily="@font/librebaskervilleregular"
                 android:hint="@string/passwordPrompt"
                 android:inputType="textPassword"
                 android:textSize="14sp" />

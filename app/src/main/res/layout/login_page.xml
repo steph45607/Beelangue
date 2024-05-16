@@ -56,8 +56,8 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/playfair"
-                android:text="@string/email"
+                android:fontFamily="@font/librebaskervilleregular"
+                android:text="@string/loginInput"
                 android:textSize="14sp" />
 
             <EditText
@@ -65,8 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:fontFamily="@font/playfair"
-                android:hint="@string/emailPrompt"
+                android:fontFamily="@font/librebaskervilleregular"
+                android:hint="@string/loginInputPrompt"
                 android:inputType="textEmailAddress"
                 android:textSize="14sp" />
 <!--password-->
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"
-                android:fontFamily="@font/playfair"
+                android:fontFamily="@font/librebaskervilleregular"
                 android:text="@string/password" />
 
             <EditText
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:fontFamily="@font/playfair"
+                android:fontFamily="@font/librebaskervilleregular"
                 android:hint="@string/passwordPrompt"
                 android:inputType="textPassword"
                 android:textSize="14sp" />
