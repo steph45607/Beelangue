@@ -232,7 +232,6 @@ public class CameraPreview extends AppCompatActivity {
                                                             @Override
                                                             public void onSuccess(String translatedText) {
                                                                 object.setText(String.format("%s (%s)", allLabels, translatedText));
-                                                                return translatedText;
                                                             }
                                                         })
                                                         .addOnFailureListener(new OnFailureListener() {
@@ -242,7 +241,6 @@ public class CameraPreview extends AppCompatActivity {
                                                             }
                                                         });
                                             }
-                                            return null;
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -252,7 +250,6 @@ public class CameraPreview extends AppCompatActivity {
                                             Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                            return null;
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
