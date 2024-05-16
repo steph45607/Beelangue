@@ -3,8 +3,8 @@ package com.example.beelangue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button profileBtn;
+    Button profileBtn, flagBtn;
     ArrayList<cardData> source;
 
     @Override
@@ -55,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("activityStatus", "source received");
 
 
-        CardAdapter adapter = new CardAdapter(this, source);
-        Log.d("activityStatus", "making ListView1");
-        ListView listview = findViewById(R.id.cardList);
-        Log.d("activityStatus", "making ListView2");
-        listview.setAdapter(adapter);
-        Log.d("activityStatus", "ListView set");
+//        CardAdapter adapter = new CardAdapter(this, source);
+//        Log.d("activityStatus", "making ListView1");
+//        ListView listview = findViewById(R.id.cardList);
+//        Log.d("activityStatus", "making ListView2");
+//        listview.setAdapter(adapter);
+//        Log.d("activityStatus", "ListView set");
 
         profileBtn = findViewById(R.id.profile);
         profileBtn.setOnClickListener(
@@ -70,16 +70,16 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-//        flagBtn = findViewById(R.id.japanese);
-//        flagBtn.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
-//                        startActivity(i);
-//                    }
-//                }
-//        );
+        flagBtn = findViewById(R.id.holder);
+        flagBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
+                        startActivity(i);
+                    }
+                }
+        );
     }
 
 }

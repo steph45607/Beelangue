@@ -33,6 +33,8 @@
         <activity android:name=".CameraPreview" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".CreateDeckActivity" />
+        <activity android:name=".LearnActivity" />
     </application>
 
 </manifest>
