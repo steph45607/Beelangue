@@ -39,6 +39,7 @@ import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -113,7 +114,7 @@ public class CameraPreview extends AppCompatActivity {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                 String savedImagePath = outputFile.getAbsolutePath();
-                detectObjects(savedImagePath);
+                detectObjects(savedImagePath, null);
 //                Toast.makeText(CameraPreview.this, "Image Saved at: " + savedImagePath, Toast.LENGTH_SHORT).show();
             }
 
@@ -125,7 +126,8 @@ public class CameraPreview extends AppCompatActivity {
         });
     }
 
-    private void detectObjects(String imagePath) {
+    private void detectObjects(String imagePath, String targetLanguage) {
+        targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
         object = findViewById(R.id.objectDetected);
 
         float radius = getResources().getDimension(R.dimen.corner_radius);
@@ -139,9 +141,18 @@ public class CameraPreview extends AppCompatActivity {
                             .setConfidenceThreshold(0.8f)
                             .build();
 
+            String targetLanguageCode;
+            try {
+                Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());
+                targetLanguageCode = (String) field.get(null);
+            } catch (Exception e) {
+                targetLanguageCode = TranslateLanguage.INDONESIAN; // Default to English if not found
+            }
+
+            assert targetLanguageCode != null;
             TranslatorOptions translatorOptions = new TranslatorOptions.Builder()
                     .setSourceLanguage(TranslateLanguage.ENGLISH)
-                    .setTargetLanguage(TranslateLanguage.INDONESIAN)
+                    .setTargetLanguage(targetLanguageCode)
                     .build();
 
             DownloadConditions conditions = new DownloadConditions.Builder()
