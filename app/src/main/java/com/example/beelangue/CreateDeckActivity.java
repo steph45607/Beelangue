@@ -32,6 +32,10 @@ public class CreateDeckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_deck);
 
+        wordText = findViewById(R.id.wordText);
+        titleText = findViewById(R.id.deckTitle);
+        words = new ArrayList<>();
+
         addBtn = findViewById(R.id.addCardBtn);
         addBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -55,7 +59,10 @@ public class CreateDeckActivity extends AppCompatActivity {
         createDeckBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("deckDB", "button clicked");
                 saveDeckToDatabase();
+                Intent i = new Intent(CreateDeckActivity.this, LearnActivity.class);
+                startActivity(i);
             }
         });
 
@@ -66,22 +73,27 @@ public class CreateDeckActivity extends AppCompatActivity {
         word = wordText.getText().toString();
         words.add(word);
         wordText.setText("");
+        Log.d("deckDB", "word - "+ word);
     }
 
     private void saveDeckToDatabase(){
+        Log.d("deckDB", "save button clicked");
         String title;
         title = titleText.getText().toString();
+        Log.d("deckDB", title + " " + words.get(0));
         deckData deck = new deckData(title, words);
+        Log.d("deckDB", "deck object created, not saved");
+//        Log.d("deckDB", deck.toString());
 
-        DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("decks");
-
-        final String pushID = ref.push().getKey();
-        Log.d("deckDB", pushID);
-        FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("decks").child(pushID).setValue(deck)
+        DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("deck");
+        Log.d("deckDB", "database reference defined");
+//        final String pushID = ref.push().getKey();
+//        DatabaseReference newRef = ref.push();
+        ref.push().setValue(deck)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Log.d("deckDB", "saved " + deck.name + " " + deck.words + " " + deck.length);
+                        Log.d("deckDB", "Data added to database");
                         Toast.makeText(getApplicationContext(), "Your achievement has been updated.", Toast.LENGTH_LONG).show();
                         finish();
                     }

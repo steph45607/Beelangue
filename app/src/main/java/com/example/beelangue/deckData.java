@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class deckData {
     public String name;
     public ArrayList<String> words;
-    public Integer length = words.size();
+//    public Integer length = words.size();
 
     public deckData(){}
 
