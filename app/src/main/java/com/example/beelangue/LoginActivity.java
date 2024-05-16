@@ -105,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             // Login failed
                             Toast.makeText(getApplicationContext(), "Login failed! Please check your email address and password!", Toast.LENGTH_LONG).show();

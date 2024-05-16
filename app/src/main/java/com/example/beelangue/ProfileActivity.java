@@ -146,6 +146,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
                                     startActivity(intent);
                                     finish();
+                                    finishAffinity();
                                 } else {
                                     // Failure
                                     Toast.makeText(getApplicationContext(), "Failed to delete account", Toast.LENGTH_LONG).show();
