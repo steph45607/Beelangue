@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Button profileBtn;
+    ArrayList<cardData> source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +29,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_page);
 
         DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("language");
-
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                ArrayList<cardData> source = new ArrayList<>();
+                source = new ArrayList<>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 //                    String name = snapshot.getKey();
                     String country = snapshot.child("country").getValue(String.class);
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                     source.add(key);
 //                    Log.d("languageDB", key.country + " " + key.id );
                 }
-//                Log.d("languageDB", "Value is: " + source.get(0).id);
+                Log.d("languageDB", "Value is: " + source.get(0).id);
             }
 
             @Override
@@ -51,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 Log.w("languageDB", "Failed to read value.", error.toException());
             }
         });
+        Log.d("activityStatus", "source received");
+
+
+        CardAdapter adapter = new CardAdapter(this, source);
+        Log.d("activityStatus", "making ListView1");
+        ListView listview = findViewById(R.id.cardList);
+        Log.d("activityStatus", "making ListView2");
+        listview.setAdapter(adapter);
+        Log.d("activityStatus", "ListView set");
 
         profileBtn = findViewById(R.id.profile);
         profileBtn.setOnClickListener(

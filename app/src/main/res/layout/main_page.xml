@@ -41,23 +41,10 @@
                 app:iconSize="30dp"
                 />
         </LinearLayout>
-        <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/cardList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.geeksforgeeks.horizontalrecyclerview.MainActivity"
-            android:id="@+id/relativelayout">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:scrollbars="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
-
-        </FrameLayout>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
