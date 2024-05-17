@@ -24,6 +24,9 @@ public class LearnActivity extends AppCompatActivity {
     ImageButton back, create;
     MaterialButton create1;
     LinearLayout buttonContainer;
+    private DatabaseReference databaseReference;
+    private ValueEventListener deckEventListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,13 +68,14 @@ public class LearnActivity extends AppCompatActivity {
                 }
         );
 
+        databaseReference = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("deck");
         fetchDecks();
     }
 
     private void fetchDecks() {
         Log.d("koesmanto", "fetch deck called");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("deck");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        deckEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("koesmanto", "deck gotten called");
@@ -85,9 +89,11 @@ public class LearnActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("koesmanto", databaseError.getMessage());
                 Toast.makeText(LearnActivity.this, "Failed to load decks.", Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        databaseReference.addValueEventListener(deckEventListener);
     }
 
     private void createDeckButton(final String deckName) {
@@ -107,5 +113,14 @@ public class LearnActivity extends AppCompatActivity {
             }
         });
         buttonContainer.addView(button);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // to avoid the fetching happening in the bg when the activity is not opened
+        if (deckEventListener != null) {
+            databaseReference.removeEventListener(deckEventListener);
+        }
     }
 }
