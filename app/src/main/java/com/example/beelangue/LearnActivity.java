@@ -35,9 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LearnActivity extends AppCompatActivity {
 
     ImageButton back, searchBtn;
@@ -100,6 +97,8 @@ public class LearnActivity extends AppCompatActivity {
                     searchEditText.setVisibility(View.VISIBLE);
                 } else {
                     searchEditText.setVisibility(View.GONE);
+                    searchEditText.setText("");
+                    searchDecks("");
                 }
             }
         });
