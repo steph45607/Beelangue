@@ -38,7 +38,7 @@
                 android:textSize="18sp" />
 
             <ImageButton
-                android:id="@+id/createBtn"
+                android:id="@+id/searchBtn"
                 android:layout_width="20dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -48,6 +48,14 @@
                 app:tint="@color/black" />
 
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:hint="Search"
+            android:visibility="gone"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/createDeck"
@@ -68,12 +76,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:orientation="vertical" />
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:orientation="vertical">-->
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:orientation="vertical">-->
 
-    <!--        </LinearLayout>-->
-</LinearLayout>
+        <!--        </LinearLayout>-->
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

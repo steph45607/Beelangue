@@ -2,9 +2,12 @@ package com.example.beelangue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -32,13 +35,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LearnActivity extends AppCompatActivity {
 
-    ImageButton back, create;
+    ImageButton back, searchBtn;
     MaterialButton create1;
     LinearLayout buttonContainer;
+    EditText searchEditText;
     private DatabaseReference databaseReference;
     private ValueEventListener deckEventListener;
+    private ArrayList<deckData> deckNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +54,13 @@ public class LearnActivity extends AppCompatActivity {
         setContentView(R.layout.learn_page);
 
         back = findViewById(R.id.backBtn);
-        create = findViewById(R.id.createBtn);
+//        create = findViewById(R.id.createBtn);
         create1 = findViewById(R.id.createDeck);
         buttonContainer = findViewById(R.id.buttonContainer);
+
+        searchBtn = findViewById(R.id.searchBtn);
+        searchEditText = findViewById(R.id.searchEditText);
+        deckNames = new ArrayList<deckData>();
 
         back.setOnClickListener(
                 new View.OnClickListener() {
@@ -81,6 +93,33 @@ public class LearnActivity extends AppCompatActivity {
                 }
         );
 
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchEditText.getVisibility() == View.GONE) {
+                    searchEditText.setVisibility(View.VISIBLE);
+                } else {
+                    searchEditText.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("koesmanto", s.toString());
+                searchDecks(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         databaseReference = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("deck");
         fetchDecks();
     }
@@ -99,7 +138,9 @@ public class LearnActivity extends AppCompatActivity {
                     ArrayList<String> wordList = snapshot.child("words").getValue(t);
                     deckData deck = new deckData(deckName, wordList);
                     Log.d("koesmanto", deckName);
+                    deckNames.add(deck);
                     createDeckButton(deck);
+
                 }
             }
 
@@ -137,6 +178,17 @@ public class LearnActivity extends AppCompatActivity {
             }
         });
         buttonContainer.addView(button);
+    }
+
+    private void searchDecks(String query) {
+        buttonContainer.removeAllViews();
+        Log.d("koesmanto", "decknames"+deckNames.toString());
+        for (deckData deck : deckNames) {
+            Log.d("koesmanto", "deckname: "+deck.name);
+            if (deck.name.toLowerCase().contains(query.toLowerCase())) {
+                createDeckButton(deck);
+            }
+        }
     }
 
     @Override
