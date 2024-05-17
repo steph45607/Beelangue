@@ -69,7 +69,7 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         Button changeEmailButton = findViewById(R.id.changeEmailButton);
 
         disableResendButton();
-        handlerResend.postDelayed(enableResendButtonRunnable, 30000);
+        handlerResend.postDelayed(enableResendButtonRunnable, 60000);
 
         resendEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
