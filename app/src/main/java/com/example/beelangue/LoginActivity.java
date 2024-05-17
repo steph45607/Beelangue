@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button createAccountBtn, loginButton  ;
+    Button createAccountBtn, loginButton, resetPasswordButton;
     EditText emailText, passwordText;
     private FirebaseAuth mAuth;
 
@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
         );
         loginButton = findViewById(R.id.login_button);
+        resetPasswordButton = findViewById(R.id.resetButton);
         emailText = findViewById(R.id.editUsername); // to be edited, use email
         passwordText = findViewById(R.id.editPassword);
 
@@ -59,9 +60,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetPassword();
+            }
+        });
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Log.d("koesmanto", "onDataChange called"+ currentUser.getUid());
+            Log.d("koesmanto", "onDataChange called" + currentUser.getUid());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
@@ -135,6 +143,61 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.w("koesmanto", "Failed sign in with username", databaseError.toException());
+                Toast.makeText(getApplicationContext(), "Database error!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void resetPassword() {
+        String input = emailText.getText().toString();
+
+        if (TextUtils.isEmpty(input)) {
+            Toast.makeText(getApplicationContext(), "Please enter your email or username!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (isEmail(input)) {
+            sendResetEmail(input);
+        } else {
+            fetchUsernameAndReset(input);
+        }
+    }
+
+    private void sendResetEmail(String email) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Password reset email sent!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to send password reset email!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    private void fetchUsernameAndReset(String username) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app");
+        DatabaseReference ref = database.getReference("users");
+
+        ref.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String email = snapshot.child("email").getValue(String.class);
+                        sendResetEmail(email);
+                        break;
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Username not found!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("koesmanto", "Failed to fetch email by username", databaseError.toException());
                 Toast.makeText(getApplicationContext(), "Database error!", Toast.LENGTH_LONG).show();
             }
         });
