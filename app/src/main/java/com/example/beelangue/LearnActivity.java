@@ -12,12 +12,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LearnActivity extends AppCompatActivity {
 
@@ -82,8 +95,11 @@ public class LearnActivity extends AppCompatActivity {
                 buttonContainer.removeAllViews();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String deckName = snapshot.child("name").getValue(String.class);
+                    GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>(){};
+                    ArrayList<String> wordList = snapshot.child("words").getValue(t);
+                    deckData deck = new deckData(deckName, wordList);
                     Log.d("koesmanto", deckName);
-                    createDeckButton(deckName);
+                    createDeckButton(deck);
                 }
             }
 
@@ -96,9 +112,9 @@ public class LearnActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(deckEventListener);
     }
 
-    private void createDeckButton(final String deckName) {
+    private void createDeckButton(final deckData deck) {
         Button button = new Button(this);
-        button.setText(deckName);
+        button.setText(deck.name);
         button.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -106,10 +122,18 @@ public class LearnActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("koesmanto", "clicked"+v.toString());
-//                Intent intent = new Intent(LearnActivity.this, deckthingy.class);
-//                intent.putExtra("DECK_NAME", deckName);
-//                startActivity(intent);
+                Log.d("koesmanto", deck.words.toString());
+                Map<String, String> dict = new HashMap<String, String>();
+                for(String word : deck.words){
+                    String translated = translate(word, "indonesian");
+                    dict.put(word,translated);
+                    Log.d("koesmanto", translated + " " + word);
+                }
+                deck.setWordDict(dict);
+                Log.d("koesmanto", "dict is set");
+                Intent intent = new Intent(LearnActivity.this, FlipCardActivity.class);
+                intent.putExtra("deck", (CharSequence) deck);
+                startActivity(intent);
             }
         });
         buttonContainer.addView(button);
@@ -122,5 +146,46 @@ public class LearnActivity extends AppCompatActivity {
         if (deckEventListener != null) {
             databaseReference.removeEventListener(deckEventListener);
         }
+    }
+
+    private String translate(String word, String targetLanguage) {
+        final String[] translated = new String[1];
+        targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
+        String targetLanguageCode;
+        try {
+            Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());
+            targetLanguageCode = (String) field.get(null);
+        } catch (Exception e) {
+            targetLanguageCode = TranslateLanguage.INDONESIAN; // Default to Indonesian if not found
+        }
+
+        assert targetLanguageCode != null;
+        TranslatorOptions translatorOptions = new TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.ENGLISH)
+                .setTargetLanguage(targetLanguageCode)
+                .build();
+
+        DownloadConditions conditions = new DownloadConditions.Builder()
+                .requireWifi() // Optional: Require WiFi for download
+                .build();
+
+        Translator translator = Translation.getClient(translatorOptions);
+
+        translator.translate(word)
+                .addOnSuccessListener(new OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(String translatedText) {
+                        translated[0] = translatedText;
+                        Log.d("translate", String.format("%s (%s)", word, translatedText));
+//                        return translatedText;
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
+                    }
+                });
+        return translated[0];
     }
 }
