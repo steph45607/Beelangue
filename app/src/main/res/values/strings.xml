@@ -16,6 +16,11 @@
     <string name="emailPrompt">email@mail.com</string>
     <string name="loginInput">Email/Username</string>
     <string name="loginInputPrompt">Enter email or username here</string>
+    <!--    verification prompts-->
+    <string name="waiting">Waiting for email verification…</string>
+    <string name="resend">Resend Verification Email</string>
+    <string name="changeEmail">Change Email</string>
+    <string name="GoToLogin">Go to Login</string>
     <!--    camera explore page-->
     <string name="cameraPrompt">Point your camera to an object \n It will show the word in chosen language</string>
     <string name="cameraButton">Capture Image</string>

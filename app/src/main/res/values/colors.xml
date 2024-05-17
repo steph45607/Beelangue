@@ -10,4 +10,9 @@
     <color name="night_primary">#96D1FF</color>
     <color name="night_secondary">#FFB893</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="button_enabled">#6200EE</color>
+    <color name="button_disabled">#BDBDBD</color>
+    <color name="text_color_enabled">#FFFFFF</color>
+    <color name="text_color_disabled">#757575</color>
 </resources>
