@@ -2,12 +2,12 @@ package com.example.beelangue;
 
 public class cardData {
     public String country;
-    public Integer id;
+    public String language;
 
     public cardData(){}
 
-    public cardData(String country, Integer id){
+    public cardData(String country, String language){
         this.country = country;
-        this.id = id;
+        this.language = language;
     }
 }

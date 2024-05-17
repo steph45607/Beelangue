@@ -42,15 +42,172 @@
                 app:iconSize="30dp"
                 />
         </LinearLayout>
+
         <Button
             android:id="@+id/holder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/flagBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="pretend button, use this for now" />
+
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="20dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/indonesiaFlag"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:backgroundTint="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/indonesia" />
+
+                    <TextView
+                        android:id="@+id/indonesiaText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poller_one"
+                        android:text="Indonesian"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/franceFlag"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:backgroundTint="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/france" />
+
+                    <TextView
+                        android:id="@+id/franceText"
+                        android:layout_width="151dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poller_one"
+                        android:text="French"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary" />
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="20dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/vietnamFlag"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:backgroundTint="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/vietnam" />
+
+                    <TextView
+                        android:id="@+id/vietnamText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poller_one"
+                        android:text="Vietnamese"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/spainFlag"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:backgroundTint="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/spain" />
+
+                    <TextView
+                        android:id="@+id/spainText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poller_one"
+                        android:text="Spanish"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary" />
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+
+
+        <!--        <Button-->
+<!--            android:id="@+id/indonesiaBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            />-->
+<!--        <Button-->
+<!--            android:id="@+id/franceBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            />-->
+<!--        <Button-->
+<!--            android:id="@+id/japanBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            />-->
+<!--        <Button-->
+<!--            android:id="@+id/spainBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            />-->
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
