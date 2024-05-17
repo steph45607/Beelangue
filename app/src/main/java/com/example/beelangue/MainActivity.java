@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
@@ -13,6 +15,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 //import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,8 +24,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button profileBtn, flagBtn;
+    Button profileBtn, holderBtn, flagBtn;
     ArrayList<cardData> source;
+    ArrayList<String> languages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +37,12 @@ public class MainActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 source = new ArrayList<>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                    String name = snapshot.getKey();
                     String country = snapshot.child("country").getValue(String.class);
                     Integer id = snapshot.child("id").getValue(Integer.class);
                     cardData key = new cardData(country, id);
                     source.add(key);
-//                    Log.d("languageDB", key.country + " " + key.id );
                 }
                 Log.d("languageDB", "Value is: " + source.get(0).id);
             }
@@ -54,13 +55,8 @@ public class MainActivity extends AppCompatActivity {
         });
         Log.d("activityStatus", "source received");
 
-
-//        CardAdapter adapter = new CardAdapter(this, source);
-//        Log.d("activityStatus", "making ListView1");
-//        ListView listview = findViewById(R.id.cardList);
-//        Log.d("activityStatus", "making ListView2");
-//        listview.setAdapter(adapter);
-//        Log.d("activityStatus", "ListView set");
+        getLanguageList();
+        getFlagImage();
 
         profileBtn = findViewById(R.id.profile);
         profileBtn.setOnClickListener(
@@ -70,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        flagBtn = findViewById(R.id.holder);
-        flagBtn.setOnClickListener(
+        holderBtn = findViewById(R.id.holder);
+        holderBtn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -80,7 +76,42 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+
+        flagBtn = findViewById(R.id.flagBtn);
+//        flagBtn.setText("language");
+//        flagBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.belangue_favicon_color,0,0,0);
     }
+
+    private void getLanguageList(){
+        DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("language");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String value = snapshot.getKey();
+                languages.add(value);
+                Log.d("languageDB", languages.toString() + " " + value);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this, "Failed to get data", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getFlagImage(){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+        for(String language : languages){
+            Log.d("languageDB", language);
+        }
+        flagBtn.setText(languages.get(0));
+//        flagBtn.setCompoundDrawablesWithIntrinsicBounds(image,0,0,0);
+    }
+
+
+
 
 }
 

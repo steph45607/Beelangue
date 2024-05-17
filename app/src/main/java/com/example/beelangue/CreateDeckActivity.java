@@ -73,7 +73,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         word = wordText.getText().toString();
         words.add(word);
         wordText.setText("");
-        Log.d("deckDB", "word - "+ word);
+        Log.d("deckDB", "word: "+ word);
     }
 
     private void saveDeckToDatabase(){
