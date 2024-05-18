@@ -73,6 +73,14 @@
                 android:text="+ Add word" />
         </LinearLayout>
 
+        <ListView
+        android:id="@+id/wordsListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp" />
+
         <Button
             android:id="@+id/finishDeckBtn"
             android:layout_width="match_parent"
