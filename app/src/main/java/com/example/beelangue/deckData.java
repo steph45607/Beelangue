@@ -13,8 +13,8 @@ import java.util.Map;
 public class deckData implements Parcelable {
     public String name;
     public List<String> words;
-    Map<String, String> wordDict;
-//    public Integer length = words.size();
+    public Map<String, String> wordDict;
+//    public List<String> translated;
 
     public deckData(){}
 
@@ -24,13 +24,14 @@ public class deckData implements Parcelable {
         this.words = words;
     }
 
-    public void setWordDict(Map<String, String> wordDict) {
-        this.wordDict = wordDict;
-    }
+//    public void setWordDict(Map<String, String> wordDict) {
+//        this.wordDict = wordDict;
+//    }
 
     protected deckData(Parcel in) {
         name = in.readString();
         words = in.createStringArrayList();
+        wordDict = (HashMap<String, String>) in.readHashMap(String.class.getClassLoader());
     }
 
     public static final Creator<deckData> CREATOR = new Creator<deckData>() {
@@ -54,6 +55,7 @@ public class deckData implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeStringList(words);
+//        dest.writeStringList(translated);
         dest.writeMap(wordDict);
     }
 }

@@ -161,21 +161,23 @@ public class LearnActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("koesmanto", deck.words.toString());
                 Map<String, String> dict = new HashMap<>();
+//                List<String> dict = new ArrayList<>();
                 for (String word : deck.words) {
                     translate(word, language, new TranslationCallback() {
                         @Override
                         public void onTranslationCompleted(String translatedText) {
                             if (translatedText != null) {
+//                                dict.add(translatedText);
                                 dict.put(word, translatedText);
                                 Log.d("koesmanto", "Translated text = " + translatedText);
                             }
                             if (dict.size() == deck.words.size()) {
-                                deck.setWordDict(dict);
-                                Log.d("koesmanto", "Dict is set: " + deck.wordDict);
+                                deckData newDeck = new deckData(deck.name, (ArrayList<String>) deck.words, dict);
+                                Log.d("koesmanto", "Dict is set: " + newDeck.wordDict);
                                 // Proceed to the next activity after all translations are done
                                 Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
                                 i.putExtra("selected_language", language);
-                                i.putExtra("deck", deck);
+                                i.putExtra("deck", newDeck);
                                 startActivity(i);
                             }
                         }

@@ -28,7 +28,7 @@ public class FlipCardActivity extends AppCompatActivity {
 //        Map<String, String> dictionary = deck.wordDict;
         Log.d("koesmanto", deck.name);
         Log.d("koesmanto", deck.words.toString());
-        Log.d("koesmanto", "deck is "+ deck.wordDict);
+        Log.d("koesmanto", deck.wordDict.toString());
 
 //        Map<String, String> dictionary = deck.wordDict;
 //        Log.d("koesmanto", dictionary);
