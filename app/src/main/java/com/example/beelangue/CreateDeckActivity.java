@@ -32,6 +32,8 @@ public class CreateDeckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_deck);
 
+        String selectedLanguage = getIntent().getStringExtra("selected_language");
+
         wordText = findViewById(R.id.wordText);
         titleText = findViewById(R.id.deckTitle);
         words = new ArrayList<>();
@@ -50,6 +52,7 @@ public class CreateDeckActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(CreateDeckActivity.this, LearnActivity.class);
+                        i.putExtra("selected_language", selectedLanguage);
                         startActivity(i);
                     }
                 }
@@ -62,6 +65,7 @@ public class CreateDeckActivity extends AppCompatActivity {
                 Log.d("deckDB", "button clicked");
                 saveDeckToDatabase();
                 Intent i = new Intent(CreateDeckActivity.this, LearnActivity.class);
+                i.putExtra("selected_language", selectedLanguage);
                 startActivity(i);
             }
         });
