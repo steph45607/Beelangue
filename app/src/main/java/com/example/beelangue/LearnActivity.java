@@ -43,7 +43,7 @@ public class LearnActivity extends AppCompatActivity {
     EditText searchEditText;
     private DatabaseReference databaseReference;
     private ValueEventListener deckEventListener;
-    private ArrayList<deckData> deckNames;
+    private ArrayList<deckData> decks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class LearnActivity extends AppCompatActivity {
 
         searchBtn = findViewById(R.id.searchBtn);
         searchEditText = findViewById(R.id.searchEditText);
-        deckNames = new ArrayList<deckData>();
+        decks = new ArrayList<deckData>();
 
         String selectedLanguage = getIntent().getStringExtra("selected_language");
 
@@ -125,15 +125,18 @@ public class LearnActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("koesmanto", "deck gotten called");
                 buttonContainer.removeAllViews();
+                decks.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String deckName = snapshot.child("name").getValue(String.class);
-                    GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>(){};
+                    GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>() {
+                    };
                     ArrayList<String> wordList = snapshot.child("words").getValue(t);
                     deckData deck = new deckData(deckName, wordList, null);
                     Log.d("koesmanto", deckName);
-                    deckNames.add(deck);
-                    createDeckButton(deck, language);
-
+                    decks.add(0, deck);
+                }
+                for (deckData deck : decks) {
+                    createDeckButton(deck, language);  // Populate buttons in the reversed order
                 }
             }
 
@@ -185,9 +188,9 @@ public class LearnActivity extends AppCompatActivity {
 
     private void searchDecks(String query, String language) {
         buttonContainer.removeAllViews();
-        Log.d("koesmanto", "decknames"+deckNames.toString());
-        for (deckData deck : deckNames) {
-            Log.d("koesmanto", "deckname: "+deck.name);
+        Log.d("koesmanto", "decknames" + decks.toString());
+        for (deckData deck : decks) {
+            Log.d("koesmanto", "deckname: " + deck.name);
             if (deck.name.toLowerCase().contains(query.toLowerCase())) {
                 createDeckButton(deck, language);
             }
