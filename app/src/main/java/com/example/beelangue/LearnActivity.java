@@ -73,16 +73,6 @@ public class LearnActivity extends AppCompatActivity {
                 }
         );
 
-//        create.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent i = new Intent(LearnActivity.this, CreateDeckActivity.class);
-//                        startActivity(i);
-//                    }
-//                }
-//        );
-
         create1.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -177,11 +167,12 @@ public class LearnActivity extends AppCompatActivity {
                                 Log.d("koesmanto", "Translated text = " + translatedText);
                             }
                             if (dict.size() == deck.words.size()) {
-                                deck.wordDict = dict;
-                                Log.d("koesmanto", "Dict is set: " + dict);
+                                deck.setWordDict(dict);
+                                Log.d("koesmanto", "Dict is set: " + deck.wordDict);
                                 // Proceed to the next activity after all translations are done
                                 Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
                                 i.putExtra("selected_language", language);
+                                i.putExtra("deck", deck);
                                 startActivity(i);
                             }
                         }
