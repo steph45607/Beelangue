@@ -77,9 +77,10 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/changeUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Account Settings"
+                android:text="change username"
                 android:backgroundTint="@color/transparent"
                 app:strokeColor="@color/secondary"
                 app:strokeWidth="2dp"
