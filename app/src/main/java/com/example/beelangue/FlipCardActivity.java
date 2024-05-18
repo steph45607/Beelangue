@@ -9,39 +9,58 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class FlipCardActivity extends AppCompatActivity {
     Button flipButton;
+    Integer currentIndex;
+    String currentText;
     ImageButton prevButton, nextButton, backBtn;
+
+    Boolean keyStatus = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_page);
-        Log.d("koesmanto", "card page hehe");
-
-//        DictionaryWrapper
+//        Log.d("koesmanto", "card page hehe");
 
         Intent intent = getIntent();
         deckData deck = intent.getParcelableExtra("deck");
-        Log.d("koesmanto", "card page intent call");
+//        Log.d("koesmanto", "card page intent call");
 
-//        Map<String, String> dictionary = deck.wordDict;
-        Log.d("koesmanto", deck.name);
-        Log.d("koesmanto", deck.words.toString());
-        Log.d("koesmanto", deck.wordDict.toString());
-
-//        Map<String, String> dictionary = deck.wordDict;
-//        Log.d("koesmanto", dictionary);
-
+        Map<String, String> dictionary = deck.wordDict;
+//        Log.d("koesmanto", deck.name);
+//        Log.d("koesmanto", deck.words.toString());
+        Log.d("koesmanto", dictionary.toString());
 
         String selectedLanguage = getIntent().getStringExtra("selected_language");
-        Log.d("koesmanto", "string language intent call");
+//        Log.d("koesmanto", "string language intent call");
 
         flipButton = findViewById(R.id.flipBtn);
+//        currentIndex = deck.words.size();
+        currentIndex = 0;
+        Set<String> keys = dictionary.keySet();
+        List<String> keyList = new ArrayList<>(keys);
+
+        flipButton.setText(keyList.get(0));
+
         flipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("koesmanto", "button flip clicked");
+                if(keyStatus) {
+                    currentText = keyList.get(currentIndex);
+                    flipButton.setText(dictionary.get(currentText));
+                    keyStatus = false;
+                }
+                else{
+                    currentText = keyList.get(currentIndex);
+                    flipButton.setText(currentText);
+                    keyStatus = true;
+                };
             }
         });
 
