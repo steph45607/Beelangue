@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class FlipCardActivity extends AppCompatActivity {
     Button flipButton;
-    Integer currentIndex;
+    Integer currentIndex, indexSize;
     String currentText;
     ImageButton prevButton, nextButton, backBtn;
 
@@ -42,15 +42,17 @@ public class FlipCardActivity extends AppCompatActivity {
 
         flipButton = findViewById(R.id.flipBtn);
 //        currentIndex = deck.words.size();
+
         currentIndex = 0;
         Set<String> keys = dictionary.keySet();
         List<String> keyList = new ArrayList<>(keys);
+        indexSize = keys.size();
 
         flipButton.setText(keyList.get(0));
-
         flipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("FlipButton", "flipped - " + currentIndex + " " + indexSize);
                 if(keyStatus) {
                     currentText = keyList.get(currentIndex);
                     flipButton.setText(dictionary.get(currentText));
@@ -71,6 +73,44 @@ public class FlipCardActivity extends AppCompatActivity {
                 Intent intent = new Intent(FlipCardActivity.this, LearnActivity.class);
                 intent.putExtra("selected_language", selectedLanguage);
                 startActivity(intent);
+            }
+        });
+
+        nextButton = findViewById(R.id.nextBtn);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("FlipButton", "next clicked - " + currentIndex + " " + currentText);
+                if (currentIndex >= 0 && currentIndex < indexSize-1) {
+                    currentIndex++;
+                    currentText = keyList.get(currentIndex);
+                    flipButton.setText(currentText);
+                    keyStatus = true;
+                }else{
+                    currentIndex = 0;
+                    currentText = keyList.get(currentIndex);
+                    flipButton.setText(currentText);
+                    keyStatus = true;
+                }
+            }
+        });
+
+        prevButton = findViewById(R.id.previousBtn);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("FlipButton", "previous clicked - " + currentIndex + " " + currentText);
+                if (currentIndex > 0 || currentIndex.equals(indexSize-1)) {
+                    currentIndex--;
+                    currentText = keyList.get(currentIndex);
+                    flipButton.setText(currentText);
+                    keyStatus = true;
+                }else{
+                    currentIndex = indexSize-1;
+                    currentText = keyList.get(currentIndex);
+                    flipButton.setText(currentText);
+                    keyStatus = true;
+                }
             }
         });
     }
