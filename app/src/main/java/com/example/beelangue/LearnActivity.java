@@ -15,8 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -170,6 +168,8 @@ public class LearnActivity extends AppCompatActivity {
 //                                dict.add(translatedText);
                                 dict.put(word, translatedText);
                                 Log.d("koesmanto", "Translated text = " + translatedText);
+                            } else {
+                                Log.d("koesmanto", "Translation failed for word: " + word);
                             }
                             if (dict.size() == deck.words.size()) {
                                 deckData newDeck = new deckData(deck.name, (ArrayList<String>) deck.words, dict);
@@ -228,26 +228,27 @@ public class LearnActivity extends AppCompatActivity {
                 .setTargetLanguage(targetLanguageCode)
                 .build();
 
+        Translator translator = Translation.getClient(translatorOptions);
+
         DownloadConditions conditions = new DownloadConditions.Builder()
                 .requireWifi() // Optional: Require WiFi for download
                 .build();
 
-        Translator translator = Translation.getClient(translatorOptions);
-
-        translator.translate(word)
-                .addOnSuccessListener(new OnSuccessListener<String>() {
-                    @Override
-                    public void onSuccess(String translatedText) {
-                        Log.d("translate", String.format("%s (%s)", word, translatedText));
-                        callback.onTranslationCompleted(translatedText);
-                    }
+        translator.downloadModelIfNeeded(conditions)
+                .addOnSuccessListener(unused -> {
+                    translator.translate(word)
+                            .addOnSuccessListener(translatedText -> {
+                                Log.d("translate", String.format("%s (%s)", word, translatedText));
+                                callback.onTranslationCompleted(translatedText);
+                            })
+                            .addOnFailureListener(exception -> {
+                                Log.e("translate", "translation failed: " + exception.getMessage());
+                                callback.onTranslationCompleted(null);
+                            });
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
-                        callback.onTranslationCompleted(null);
-                    }
+                .addOnFailureListener(exception -> {
+                    Log.e("translate", "Model Download failed: " + exception.getMessage());
+                    callback.onTranslationCompleted(null);
                 });
     }
 }
