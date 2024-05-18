@@ -26,6 +26,8 @@ public class FlipCardActivity extends AppCompatActivity {
 //        deckData deck = intent.getParcelableExtra("deck");
 //        Log.d("koesmanto", deck.words.toString() + " from card page hehe");
 
+        String selectedLanguage = getIntent().getStringExtra("selected_language");
+
         flipButton = findViewById(R.id.flipBtn);
         flipButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -39,6 +41,7 @@ public class FlipCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(FlipCardActivity.this, LearnActivity.class);
+                intent.putExtra("selected_language", selectedLanguage);
                 startActivity(intent);
             }
         });

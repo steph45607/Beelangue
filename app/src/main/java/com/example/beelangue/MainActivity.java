@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Button profileBtn, holderBtn;
+    ImageButton indo, france, vietnam, spain;
     Button flagBtn;
     ArrayList<cardData> source;
 
@@ -69,11 +71,62 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
-                        i.putExtra("selected_language", "chinese");
+                        i.putExtra("selected_language", "indonesia");
                         startActivity(i);
                     }
                 }
         );
+
+        indo = findViewById(R.id.indonesiaFlag);
+        indo.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
+                        i.putExtra("selected_language", "indonesia");
+                        startActivity(i);
+                    }
+                }
+        );
+
+        france = findViewById(R.id.franceFlag);
+        france.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
+                        i.putExtra("selected_language", "french");
+                        startActivity(i);
+                    }
+                }
+        );
+
+        vietnam = findViewById(R.id.vietnamFlag);
+        vietnam.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
+                        i.putExtra("selected_language", "vietnamese");
+                        startActivity(i);
+                    }
+                }
+        );
+
+        spain = findViewById(R.id.spainFlag);
+        spain.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
+                        i.putExtra("selected_language", "spanish");
+                        startActivity(i);
+                    }
+                }
+        );
+
+
+
 
 
 //        flagBtn = findViewById(R.id.flagBtn);

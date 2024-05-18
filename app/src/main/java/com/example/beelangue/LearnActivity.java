@@ -66,6 +66,7 @@ public class LearnActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(LearnActivity.this, LearnExploreActivity.class);
+                        i.putExtra("selected_language", selectedLanguage);
                         startActivity(i);
                         finish();
                     }
@@ -179,6 +180,7 @@ public class LearnActivity extends AppCompatActivity {
                                 Log.d("koesmanto", "Dict is set: " + dict);
                                 // Proceed to the next activity after all translations are done
                                 Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
+                                i.putExtra("selected_language", language);
                                 startActivity(i);
                             }
                         }
@@ -215,7 +217,6 @@ public class LearnActivity extends AppCompatActivity {
 
 
     private void translate(String word, String targetLanguage, TranslationCallback callback) {
-        targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
         String targetLanguageCode;
         try {
             Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());

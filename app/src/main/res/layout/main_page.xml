@@ -58,6 +58,7 @@
             android:orientation="horizontal">
 
             <FrameLayout
+                android:id="@+id/indo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp">
@@ -88,6 +89,7 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/france"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp">
@@ -126,6 +128,7 @@
             android:orientation="horizontal">
 
             <FrameLayout
+                android:id="@+id/vietnam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp">
@@ -156,6 +159,7 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/spain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp">

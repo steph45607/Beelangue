@@ -49,6 +49,7 @@ public class LearnExploreActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(LearnExploreActivity.this, LearnActivity.class);
+                        i.putExtra("selected_language", selectedLanguage);
                         startActivity(i);
                     }
                 }
