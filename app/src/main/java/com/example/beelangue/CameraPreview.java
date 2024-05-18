@@ -128,42 +128,6 @@ public class CameraPreview extends AppCompatActivity {
         });
     }
 
-    private void translate(String word, String targetLanguage) {
-        String targetLanguageCode;
-        try {
-            Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());
-            targetLanguageCode = (String) field.get(null);
-        } catch (Exception e) {
-            targetLanguageCode = TranslateLanguage.INDONESIAN; // Default to Indonesian if not found
-        }
-
-        assert targetLanguageCode != null;
-        TranslatorOptions translatorOptions = new TranslatorOptions.Builder()
-                .setSourceLanguage(TranslateLanguage.ENGLISH)
-                .setTargetLanguage(targetLanguageCode)
-                .build();
-
-        DownloadConditions conditions = new DownloadConditions.Builder()
-                .requireWifi() // Optional: Require WiFi for download
-                .build();
-
-        Translator translator = Translation.getClient(translatorOptions);
-
-        translator.translate(word)
-                .addOnSuccessListener(new OnSuccessListener<String>() {
-                    @Override
-                    public void onSuccess(String translatedText) {
-                        Log.d("translate", String.format("%s (%s)", word, translatedText));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e("translate", "Translation Failed: " + exception.getMessage());
-                    }
-                });
-    }
-
     private void detectObjects(String imagePath, String targetLanguage) {
         object = findViewById(R.id.objectDetected);
 
