@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,7 @@ public class FlipCardActivity extends AppCompatActivity {
     Integer currentIndex, indexSize;
     String currentText;
     ImageButton prevButton, nextButton, backBtn;
+    TextView cardNumberTextView;
 
     Boolean keyStatus = true;
 
@@ -43,10 +45,14 @@ public class FlipCardActivity extends AppCompatActivity {
         flipButton = findViewById(R.id.flipBtn);
 //        currentIndex = deck.words.size();
 
+        cardNumberTextView = findViewById(R.id.cardNumber);
+
         currentIndex = 0;
         Set<String> keys = dictionary.keySet();
         List<String> keyList = new ArrayList<>(keys);
         indexSize = keys.size();
+
+        updateCardNumber();
 
         flipButton.setText(keyList.get(0));
         flipButton.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +98,7 @@ public class FlipCardActivity extends AppCompatActivity {
                     flipButton.setText(currentText);
                     keyStatus = true;
                 }
+                updateCardNumber();
             }
         });
 
@@ -111,8 +118,13 @@ public class FlipCardActivity extends AppCompatActivity {
                     flipButton.setText(currentText);
                     keyStatus = true;
                 }
+                updateCardNumber();
             }
         });
     }
 
+    private void updateCardNumber() {
+        String cardNumberText = (currentIndex + 1) + "/" + indexSize;
+        cardNumberTextView.setText(cardNumberText);
+    }
 }
