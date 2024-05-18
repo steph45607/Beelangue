@@ -40,6 +40,7 @@
                 android:background="@color/transparent"
                 app:icon="@drawable/person"
                 app:iconSize="30dp"
+                app:iconTint="@color/black"
                 />
         </LinearLayout>
 
