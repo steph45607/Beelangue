@@ -100,7 +100,7 @@ public class LearnActivity extends AppCompatActivity {
                 } else {
                     searchEditText.setVisibility(View.GONE);
                     searchEditText.setText("");
-                    searchDecks("");
+                    searchDecks("", selectedLanguage);
                 }
             }
         });
@@ -113,7 +113,7 @@ public class LearnActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.d("koesmanto", s.toString());
-                searchDecks(s.toString());
+                searchDecks(s.toString(), selectedLanguage);
             }
 
             @Override
@@ -140,7 +140,7 @@ public class LearnActivity extends AppCompatActivity {
                     deckData deck = new deckData(deckName, wordList, null);
                     Log.d("koesmanto", deckName);
                     deckNames.add(deck);
-                    createDeckButton(deck);
+                    createDeckButton(deck, language);
 
                 }
             }
@@ -189,13 +189,13 @@ public class LearnActivity extends AppCompatActivity {
         buttonContainer.addView(button);
     }
 
-    private void searchDecks(String query) {
+    private void searchDecks(String query, String language) {
         buttonContainer.removeAllViews();
         Log.d("koesmanto", "decknames"+deckNames.toString());
         for (deckData deck : deckNames) {
             Log.d("koesmanto", "deckname: "+deck.name);
             if (deck.name.toLowerCase().contains(query.toLowerCase())) {
-                createDeckButton(deck);
+                createDeckButton(deck, language);
             }
         }
     }
