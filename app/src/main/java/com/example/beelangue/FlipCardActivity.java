@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class FlipCardActivity extends AppCompatActivity {
     Button flipButton;
-    ImageButton prevButton, nextButton;
+    ImageButton prevButton, nextButton, backBtn;
 
 //    make a function to get the words from database
 
@@ -31,6 +31,15 @@ public class FlipCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Log.d("koesmanto", "button flip clicked");
+            }
+        });
+
+        backBtn = findViewById(R.id.backButton);
+        backBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(FlipCardActivity.this, LearnActivity.class);
+                startActivity(intent);
             }
         });
     }

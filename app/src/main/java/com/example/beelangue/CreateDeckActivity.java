@@ -81,7 +81,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         String title;
         title = titleText.getText().toString();
         Log.d("deckDB", title + " " + words.get(0));
-        deckData deck = new deckData(title, words);
+        deckData deck = new deckData(title, words, null);
         Log.d("deckDB", "deck object created, not saved");
 //        Log.d("deckDB", deck.toString());
 

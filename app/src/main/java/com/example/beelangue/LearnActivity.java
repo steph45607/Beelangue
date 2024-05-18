@@ -135,7 +135,7 @@ public class LearnActivity extends AppCompatActivity {
                     String deckName = snapshot.child("name").getValue(String.class);
                     GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>(){};
                     ArrayList<String> wordList = snapshot.child("words").getValue(t);
-                    deckData deck = new deckData(deckName, wordList);
+                    deckData deck = new deckData(deckName, wordList, null);
                     Log.d("koesmanto", deckName);
                     deckNames.add(deck);
                     createDeckButton(deck);
@@ -169,11 +169,12 @@ public class LearnActivity extends AppCompatActivity {
                     dict.put(word,translated);
                     Log.d("koesmanto", translated + " " + word);
                 }
-                deck.setWordDict(dict);
-                Log.d("koesmanto", "dict is set");
-                Intent intent = new Intent(LearnActivity.this, FlipCardActivity.class);
-                intent.putExtra("deck", (CharSequence) deck);
-                startActivity(intent);
+//                deck.setWordDict(dict);
+                deck.wordDict = dict;
+                Log.d("koesmanto", "dict is set" + dict);
+                Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
+//                intent.putExtra("deck", (CharSequence) deck);
+                startActivity(i);
             }
         });
         buttonContainer.addView(button);
