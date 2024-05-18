@@ -56,15 +56,15 @@ public class CameraPreview extends AppCompatActivity {
         setContentView(R.layout.camera_page);
 
         backBtn = findViewById(R.id.backButton);
+        selectedLanguage = getIntent().getStringExtra("selected_language");
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(CameraPreview.this, LearnExploreActivity.class);
+                i.putExtra("selected_language", selectedLanguage);
                 startActivity((i));
             }
         });
-
-        selectedLanguage = getIntent().getStringExtra("selected_language");
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
