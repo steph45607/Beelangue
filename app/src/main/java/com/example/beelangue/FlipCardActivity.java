@@ -22,9 +22,9 @@ public class FlipCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_page);
 
-        Intent intent = getIntent();
-        deckData deck = intent.getParcelableExtra("deck");
-        Log.d("koesmanto", deck.words.toString() + " from card page hehe");
+//        Intent intent = getIntent();
+//        deckData deck = intent.getParcelableExtra("deck");
+//        Log.d("koesmanto", deck.words.toString() + " from card page hehe");
 
         flipButton = findViewById(R.id.flipBtn);
         flipButton.setOnClickListener(new View.OnClickListener(){

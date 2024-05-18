@@ -172,8 +172,9 @@ public class LearnActivity extends AppCompatActivity {
 //                deck.setWordDict(dict);
                 deck.wordDict = dict;
                 Log.d("koesmanto", "dict is set" + dict);
+//                TODO What the fuck happened here??? it won't run, im just calling to another activity, wtf?
                 Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
-//                intent.putExtra("deck", (CharSequence) deck);
+                i.putExtra("deck", deck);
                 startActivity(i);
             }
         });
@@ -201,7 +202,7 @@ public class LearnActivity extends AppCompatActivity {
     }
 
     private String translate(String word, String targetLanguage) {
-        final String[] translated = new String[1];
+        final String translatedString;
         targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
         String targetLanguageCode;
         try {
@@ -227,7 +228,7 @@ public class LearnActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<String>() {
                     @Override
                     public void onSuccess(String translatedText) {
-                        translated[0] = translatedText;
+//                        translatedString.
                         Log.d("translate", String.format("%s (%s)", word, translatedText));
 //                        return translatedText;
                     }
@@ -238,6 +239,6 @@ public class LearnActivity extends AppCompatActivity {
                         Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
                     }
                 });
-        return translated[0];
+//        return translatedText;
     }
 }
