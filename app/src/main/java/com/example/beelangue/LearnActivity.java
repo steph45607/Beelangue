@@ -163,23 +163,61 @@ public class LearnActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("koesmanto", deck.words.toString());
-                Map<String, String> dict = new HashMap<String, String>();
-                for(String word : deck.words){
-                    String translated = translate(word, "indonesian");
-                    dict.put(word,translated);
-                    Log.d("koesmanto", translated + " " + word);
+                Map<String, String> dict = new HashMap<>();
+                for (String word : deck.words) {
+                    translate(word, "indonesian", new TranslationCallback() {
+                        @Override
+                        public void onTranslationCompleted(String translatedText) {
+                            if (translatedText != null) {
+                                dict.put(word, translatedText);
+                                Log.d("koesmanto", "Translated text = " + translatedText);
+                            }
+                            if (dict.size() == deck.words.size()) {
+                                deck.wordDict = dict;
+                                Log.d("koesmanto", "Dict is set: " + dict);
+                                // Proceed to the next activity after all translations are done
+                                Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
+                                startActivity(i);
+                            }
+                        }
+                    });
                 }
-//                deck.setWordDict(dict);
-                deck.wordDict = dict;
-                Log.d("koesmanto", "dict is set" + dict);
-//                TODO What the fuck happened here??? it won't run, im just calling to another activity, wtf?
-                Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
-                i.putExtra("deck", deck);
-                startActivity(i);
             }
         });
         buttonContainer.addView(button);
     }
+
+
+//    private void createDeckButton(final deckData deck) {
+//        Button button = new Button(this);
+//        button.setText(deck.name);
+//        button.setLayoutParams(new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        ));
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("koesmanto", deck.words.toString());
+//                Map<String, String> dict = new HashMap<String, String>();
+//                for(String word : deck.words){
+//                    String translated;
+//                    translated = translate(word, "indonesian");
+//                    Log.d("koesmanto", "translated text = " + translated);
+//                    dict.put(word,translated);
+//                    Log.d("koesmanto", translated + " " + word);
+//                }
+////                deck.setWordDict(dict);
+//                deck.wordDict = dict;
+//                Log.d("koesmanto", "dict is set" + dict);
+////                TODO What the fuck happened here??? it won't run, im just calling to another activity, wtf?
+//                Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
+////                i.putExtra("deck", (CharSequence) deck);
+//                startActivity(i);
+//            }
+//        });
+//        buttonContainer.addView(button);
+//    }
 
     private void searchDecks(String query) {
         buttonContainer.removeAllViews();
@@ -201,8 +239,12 @@ public class LearnActivity extends AppCompatActivity {
         }
     }
 
-    private String translate(String word, String targetLanguage) {
-        final String translatedString;
+    public interface TranslationCallback {
+        void onTranslationCompleted(String translatedText);
+    }
+
+
+    private void translate(String word, String targetLanguage, TranslationCallback callback) {
         targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
         String targetLanguageCode;
         try {
@@ -228,17 +270,57 @@ public class LearnActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<String>() {
                     @Override
                     public void onSuccess(String translatedText) {
-//                        translatedString.
                         Log.d("translate", String.format("%s (%s)", word, translatedText));
-//                        return translatedText;
+                        callback.onTranslationCompleted(translatedText);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
+                        callback.onTranslationCompleted(null);
                     }
                 });
-//        return translatedText;
     }
+
+
+//    private String translate(String word, String targetLanguage) {
+//        String translated;
+//        targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
+//        String targetLanguageCode;
+//        try {
+//            Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());
+//            targetLanguageCode = (String) field.get(null);
+//        } catch (Exception e) {
+//            targetLanguageCode = TranslateLanguage.INDONESIAN; // Default to Indonesian if not found
+//        }
+//
+//        assert targetLanguageCode != null;
+//        TranslatorOptions translatorOptions = new TranslatorOptions.Builder()
+//                .setSourceLanguage(TranslateLanguage.ENGLISH)
+//                .setTargetLanguage(targetLanguageCode)
+//                .build();
+//
+//        DownloadConditions conditions = new DownloadConditions.Builder()
+//                .requireWifi() // Optional: Require WiFi for download
+//                .build();
+//
+//        Translator translator = Translation.getClient(translatorOptions);
+//
+//        translator.translate(word)
+//                .addOnSuccessListener(new OnSuccessListener<String>() {
+//                    @Override
+//                    public void onSuccess(String translatedText) {
+//                        Log.d("translate", String.format("%s (%s)", word, translatedText));
+//                        translated = translatedText;
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
+//                    }
+//                });
+//        return translated;
+//    }
 }

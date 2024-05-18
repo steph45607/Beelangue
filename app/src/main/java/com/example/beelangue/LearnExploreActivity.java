@@ -17,6 +17,7 @@ public class LearnExploreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.learn_explore);
+        String selectedLanguage = getIntent().getStringExtra("selected_language");
         FirebaseApp.initializeApp(this);
 
         backButton = findViewById(R.id.backBtn);
@@ -36,6 +37,7 @@ public class LearnExploreActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(LearnExploreActivity.this, CameraPreview.class);
+                        i.putExtra("selected_language", selectedLanguage);
                         startActivity(i);
                     }
                 }

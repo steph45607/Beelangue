@@ -48,6 +48,7 @@ public class CameraPreview extends AppCompatActivity {
     private ImageCapture imageCapture;
     ImageButton backBtn;
     TextView object;
+    private String selectedLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,8 @@ public class CameraPreview extends AppCompatActivity {
                 startActivity((i));
             }
         });
+
+        selectedLanguage = getIntent().getStringExtra("selected_language");
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
@@ -114,8 +117,7 @@ public class CameraPreview extends AppCompatActivity {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                 String savedImagePath = outputFile.getAbsolutePath();
-                detectObjects(savedImagePath, null);
-//                Toast.makeText(CameraPreview.this, "Image Saved at: " + savedImagePath, Toast.LENGTH_SHORT).show();
+                detectObjects(savedImagePath, selectedLanguage);
             }
 
             @Override
@@ -127,7 +129,6 @@ public class CameraPreview extends AppCompatActivity {
     }
 
     private void translate(String word, String targetLanguage) {
-        targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
         String targetLanguageCode;
         try {
             Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());
@@ -158,16 +159,13 @@ public class CameraPreview extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
+                        Log.e("translate", "Translation Failed: " + exception.getMessage());
                     }
                 });
     }
 
     private void detectObjects(String imagePath, String targetLanguage) {
-        targetLanguage = targetLanguage != null ? targetLanguage : "indonesian";
         object = findViewById(R.id.objectDetected);
-
-        float radius = getResources().getDimension(R.dimen.corner_radius);
 
         try {
             Log.d("ObjectDetection", "Image Saved at: " + imagePath);
