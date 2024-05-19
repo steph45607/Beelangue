@@ -178,7 +178,7 @@ public class CreateDeckActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d("deckDB", "Data added to database");
-                        Toast.makeText(getApplicationContext(), "Your achievement has been updated.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Deck created successfully", Toast.LENGTH_LONG).show();
                         Intent i = new Intent(CreateDeckActivity.this, LearnActivity.class);
                         i.putExtra("selected_language", selectedLanguage);
                         startActivity(i);

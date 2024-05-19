@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,9 +19,10 @@ import java.util.Set;
 public class FlipCardActivity extends AppCompatActivity {
     Button flipButton;
     Integer currentIndex, indexSize;
+
     String currentText;
     ImageButton prevButton, nextButton, backBtn;
-    TextView cardNumberTextView;
+    TextView cardNumberTextView, deckTitleView;
 
     Boolean keyStatus = true;
 
@@ -29,7 +31,7 @@ public class FlipCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_page);
 //        Log.d("koesmanto", "card page hehe");
-
+        Toast.makeText(this, "Click on the card to flip", Toast.LENGTH_LONG).show();
         Intent intent = getIntent();
         deckData deck = intent.getParcelableExtra("deck");
 //        Log.d("koesmanto", "card page intent call");
@@ -42,8 +44,9 @@ public class FlipCardActivity extends AppCompatActivity {
         String selectedLanguage = getIntent().getStringExtra("selected_language");
 //        Log.d("koesmanto", "string language intent call");
 
+        deckTitleView = findViewById(R.id.deckTitle);
+        deckTitleView.setText(deck.name);
         flipButton = findViewById(R.id.flipBtn);
-//        currentIndex = deck.words.size();
 
         cardNumberTextView = findViewById(R.id.cardNumber);
 

@@ -147,13 +147,21 @@ public class LearnActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(deckEventListener);
     }
 
-    private void createDeckButton(final deckData deck, String language) {
+    private void createDeckButton(final deckData  deck, String language) {
         Button button = new Button(this);
         button.setText(deck.name);
-        button.setLayoutParams(new LinearLayout.LayoutParams(
+        button.setTextAppearance(R.style.buttonStyle);
+        int color = getResources().getColor(R.color.secondary);
+        button.setBackgroundColor(color);
+        button.setPadding(16, 8, 16, 8);
+//        @StyleRes int defStyleRes= R.style.buttonStyle;
+//        button.setBackgroundResource(defStyleRes);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
+        );
+        params.setMargins(0,0,0,10);
+        button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

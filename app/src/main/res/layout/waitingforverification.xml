@@ -27,12 +27,25 @@
         android:id="@+id/resendEmailButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/poller_one"
         android:text="@string/resend" />
 
-    <Button
+<!--    <Button-->
+<!--        android:id="@+id/changeEmailButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/changeEmail"-->
+<!--        />-->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/changeEmailButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/changeEmail" />
+        android:fontFamily="@font/poller_one"
+        android:text="Change Email"
+        android:textColor="@color/secondary"
+        app:backgroundTint="@color/transparent"
+        app:iconTint="@color/transparent"
+        app:strokeColor="@color/secondary"
+        app:strokeWidth="2dp" />
 
 </LinearLayout>
