@@ -44,18 +44,11 @@
                 />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/holder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="pretend button, use this for now" />
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="40dp"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -184,6 +177,75 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poller_one"
                         android:text="Spanish"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary" />
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="20dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/russia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/russiaFlag"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:backgroundTint="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/russian" />
+
+                    <TextView
+                        android:id="@+id/russiaText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poller_one"
+                        android:text="Russian"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/italy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/italyFlag"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:backgroundTint="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/italy" />
+
+                    <TextView
+                        android:id="@+id/italyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poller_one"
+                        android:text="Italian"
                         android:textAlignment="center"
                         android:textColor="@color/primary" />
                 </LinearLayout>

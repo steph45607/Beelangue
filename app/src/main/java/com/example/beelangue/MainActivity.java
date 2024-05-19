@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button profileBtn, holderBtn;
-    ImageButton indo, france, vietnam, spain;
+    Button profileBtn;
+    ImageButton indo, france, vietnam, spain, italy, russia;
     Button flagBtn;
     ArrayList<cardData> source;
 
@@ -62,18 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 v -> {
                     Intent i = new Intent(MainActivity.this, ProfileActivity.class);
                     startActivity(i);
-                }
-        );
-
-        holderBtn = findViewById(R.id.holder);
-        holderBtn.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
-                        i.putExtra("selected_language", "indonesia");
-                        startActivity(i);
-                    }
                 }
         );
 
@@ -125,35 +113,30 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        italy = findViewById(R.id.italyFlag);
+        italy.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
+                        i.putExtra("selected_language", "italian");
+                        startActivity(i);
+                    }
+                }
+        );
 
-
-
-
-//        flagBtn = findViewById(R.id.flagBtn);
-//        flagBtn.setText("language");
-//        flagBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.belangue_favicon_color,0,0,0);
+        russia = findViewById(R.id.russiaFlag);
+        russia.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, LearnExploreActivity.class);
+                        i.putExtra("selected_language", "russian");
+                        startActivity(i);
+                    }
+                }
+        );
     }
-
-
-//    private void getFlagImage(){
-////        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-////        StorageReference storageReference = firebaseStorage.getReference("flags/");
-//        for(cardData card: source){
-//            String source = "R.id" + card.language + "Btn";
-////            flagBtn = findViewById(source);
-////            StorageReference imageRef = storageReference.child("flags/" + card.country + ".png");
-////            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-////               flagBtn.setCompoundDrawablesWithIntrinsicBounds(uri,0,0,0);
-////            });
-//
-//        }
-//        for(cardData card : source){
-//            Log.d("languageDB", card.language + " - " + card.country);
-//        }
-//    }
-
-
-
 
 }
 
