@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileActivity extends AppCompatActivity {
     ImageButton backBtn;
     Button changeUsernameBtn;
+    Button changePasswordBtn;
     Button logoutBtn;
     Button deleteAccountBtn;
     FirebaseAuth mAuth;
@@ -66,6 +67,15 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ChangeUsernameDialog();
+            }
+        });
+
+        changePasswordBtn = findViewById(R.id.changePassword);
+        changePasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
             }
         });
 
