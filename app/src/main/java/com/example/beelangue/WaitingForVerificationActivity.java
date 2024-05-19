@@ -27,6 +27,8 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private DatabaseReference mDatabase;
     private Button resendEmailButton;
+
+    // Handler for checking verification status
     private final Handler handler = new Handler();
     private final Runnable checkVerificationStatus = new Runnable() {
         @Override
@@ -35,11 +37,13 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (mUser.isEmailVerified()) {
+                        // Email verified, navigate to MainActivity
                         Toast.makeText(WaitingForVerificationActivity.this, "Email verified!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(WaitingForVerificationActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
+                        // Not verified yet, check again after 3 seconds
                         handler.postDelayed(checkVerificationStatus, 3000);
                     }
                 }
@@ -47,11 +51,12 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         }
     };
 
+    // Handler for enabling resend button after a timeout
     private Handler handlerResend = new Handler();
     private Runnable enableResendButtonRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.d("koesmanto", "Timer reset");
+            // Enable resend button
             enableResendButton();
         }
     };
@@ -68,9 +73,11 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         resendEmailButton = findViewById(R.id.resendEmailButton);
         Button changeEmailButton = findViewById(R.id.changeEmailButton);
 
+        // Disable resend button initially and schedule re-enabling after 60 seconds
         disableResendButton();
         handlerResend.postDelayed(enableResendButtonRunnable, 60000);
 
+        // Resend email button click listener
         resendEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +85,7 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
             }
         });
 
+        // Change email button click listener
         changeEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +93,10 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
             }
         });
 
+        // Start checking verification status
         handler.postDelayed(checkVerificationStatus, 3000);
+
+        // Handle back press
         OnBackPressedDispatcher onBackPressedDispatcher = this.getOnBackPressedDispatcher();
         onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -98,17 +109,10 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         });
     }
 
-    // doesn't work yet, if user leaves the app during the verification, it still goes through
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!mUser.isEmailVerified()) {
-            cancelRegistration();
-        }
-    }
-
+    // Resend email verification
     private void resendVerificationEmail() {
         disableResendButton();
-        handlerResend.postDelayed(enableResendButtonRunnable, 60000); // Re-enable after 30 seconds
+        handlerResend.postDelayed(enableResendButtonRunnable, 60000); // Re-enable after 60 seconds
         mUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -122,30 +126,32 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         });
     }
 
+    // Enable resend button
     private void enableResendButton() {
         resendEmailButton.setEnabled(true);
         resendEmailButton.setBackgroundColor(ContextCompat.getColor(this, R.color.button_enabled));
         resendEmailButton.setTextColor(ContextCompat.getColor(this, R.color.text_color_enabled));
     }
 
+    // Disable resend button
     private void disableResendButton() {
         resendEmailButton.setEnabled(false);
         resendEmailButton.setBackgroundColor(ContextCompat.getColor(this, R.color.button_disabled));
         resendEmailButton.setTextColor(ContextCompat.getColor(this, R.color.text_color_disabled));
     }
 
+    // Cancel user registration
     private void cancelRegistration() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
 
-            // Delete username from database
+            // Delete user data from database
             mDatabase.child("users").child(userId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        //  username deleted
-                        //  delete the user account
+                        // User data deleted, now delete the user account
                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

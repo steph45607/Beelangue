@@ -35,9 +35,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
+
+        // Initialize Firebase Authentication
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
 
+        // Create Account button click listener
         createAccountBtn = findViewById(R.id.create_button);
         createAccountBtn.setOnClickListener(
                 new View.OnClickListener() {
@@ -53,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         emailText = findViewById(R.id.editUsername); // to be edited, use email
         passwordText = findViewById(R.id.editPassword);
 
+        // Login button click listener
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Reset Password button click listener
         resetPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,18 +72,22 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Check if the user is already logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Log.d("koesmanto", "onDataChange called" + currentUser.getUid());
+            // If logged in, navigate to MainActivity
+            Log.d("DB", "onDataChange called" + currentUser.getUid());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
     }
 
+    // Method to log in the user
     private void loginUser() {
         String input = emailText.getText().toString();
         String password = passwordText.getText().toString();
 
+        // Check for empty fields
         if (TextUtils.isEmpty(input)) {
             Toast.makeText(getApplicationContext(), "Please enter email or username!", Toast.LENGTH_LONG).show();
             return;
@@ -88,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Determine if the input is an email or username and proceed with login accordingly
         if (isEmail(input)) {
             // Login with email
             signInWithEmail(input, password);
@@ -97,17 +107,20 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // Method to check if the input is an email
     private boolean isEmail(String email) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         return email.matches(emailPattern);
     }
 
+    // Method to sign in with email
     private void signInWithEmail(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("koesmanto", "signInWithEmailAndPassword: " + (task.isSuccessful() ? "success" : "failure"));
+                        Log.d("login", "signInWithEmailAndPassword: " + (task.isSuccessful() ? "success" : "failure"));
+                        // Method to sign in with email
                         if (task.isSuccessful()) {
                             // Login successful
                             Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
@@ -122,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    // Method to sign in with username
     private void signInWithUsername(String username, String password) {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app");
         DatabaseReference ref = database.getReference("users");
@@ -129,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
         ref.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // If username exists, retrieve associated email and proceed with email login
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String email = snapshot.child("email").getValue(String.class);
@@ -136,21 +151,25 @@ public class LoginActivity extends AppCompatActivity {
                         break;
                     }
                 } else {
+                    // Username not found
                     Toast.makeText(getApplicationContext(), "Login failed! Please check your username and password!", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("koesmanto", "Failed sign in with username", databaseError.toException());
+                // Database error
+                Log.w("login", "Failed sign in with username", databaseError.toException());
                 Toast.makeText(getApplicationContext(), "Database error!", Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    // Method to reset password
     private void resetPassword() {
         String input = emailText.getText().toString();
 
+        // Check for empty field
         if (TextUtils.isEmpty(input)) {
             Toast.makeText(getApplicationContext(), "Please enter your email or username!", Toast.LENGTH_LONG).show();
             return;
@@ -163,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // Method to send reset email
     private void sendResetEmail(String email) {
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -177,6 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    // Method to fetch username and reset password
     private void fetchUsernameAndReset(String username) {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app");
         DatabaseReference ref = database.getReference("users");
@@ -197,7 +218,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("koesmanto", "Failed to fetch email by username", databaseError.toException());
+                Log.w("login", "Failed to fetch email by username", databaseError.toException());
                 Toast.makeText(getApplicationContext(), "Database error!", Toast.LENGTH_LONG).show();
             }
         });

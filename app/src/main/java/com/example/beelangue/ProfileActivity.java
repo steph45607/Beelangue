@@ -44,66 +44,75 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_page);
 
+        // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
 
+        // Initialize Firebase Database
         mDatabase = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
+        // Back button click listener
         backBtn = findViewById(R.id.backButton);
-        backBtn.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(ProfileActivity.this, MainActivity.class);
-                        startActivity(i);
-                    }
-                }
-        );
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to MainActivity
+                Intent i = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(i);
+            }
+        });
 
+        // Set the current username
         usernameTextView = findViewById(R.id.textView12);
         setUsername();
 
+        // Change Username button click listener
         changeUsernameBtn = findViewById(R.id.changeUsername);
         changeUsernameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Show dialog to change username
                 ChangeUsernameDialog();
             }
         });
 
+        // Change Password button click listener
         changePasswordBtn = findViewById(R.id.changePassword);
         changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navigate to ChangePasswordActivity
                 Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
                 startActivity(intent);
             }
         });
 
+        // Delete Account button click listener
         deleteAccountBtn = findViewById(R.id.deleteAccount);
         deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Prompt for confirmation before deleting account
                 deleteAccountPrompt();
             }
         });
 
+        // Logout button click listener
         logoutBtn = findViewById(R.id.logout);
-
-        logoutBtn.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mAuth.signOut();
-                        Toast.makeText(getApplicationContext(), "Logout successful", Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        finish();
-                        finishAffinity();
-                    }
-                }
-        );
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Sign out the user and navigate to LoginActivity
+                mAuth.signOut();
+                Toast.makeText(getApplicationContext(), "Logout successful", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+                finishAffinity();
+            }
+        });
     }
 
+    // Method to set the current username
     private void setUsername() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -129,6 +138,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Method to show dialog for changing username
     private void ChangeUsernameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Change Username");
@@ -143,6 +153,7 @@ public class ProfileActivity extends AppCompatActivity {
                 dialog.dismiss();
                 String newUsername = input.getText().toString().trim();
                 if (!newUsername.isEmpty()) {
+                    // Update username
                     updateUsername(newUsername);
                 } else {
                     Toast.makeText(getApplicationContext(), "Username cannot be empty", Toast.LENGTH_SHORT).show();
@@ -159,6 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // Method to update username
     private void updateUsername(final String newUsername) {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -167,6 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        // Username updated successfully
                         usernameTextView.setText(newUsername);
                         Toast.makeText(getApplicationContext(), "Username updated", Toast.LENGTH_LONG).show();
                     } else {
@@ -177,26 +190,26 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-
-    // send alert for deleting
+    // Method to prompt for confirmation before deleting account
     private void deleteAccountPrompt() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete your account?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        // If yes, delete the account
                         deleteAccount();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // cancel
+                        // If no, cancel the operation
                     }
                 });
-        // show alert
+        // Show the alert dialog
         builder.create().show();
     }
 
-    // delete account if yes
+    // Method to delete account
     private void deleteAccount() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -207,20 +220,19 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        //  username deleted
-                        //  delete the user account
+                        // Username deleted, now delete the user account
                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    // Account deleted
+                                    // Account deleted successfully
                                     Toast.makeText(getApplicationContext(), "Account deleted", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
                                     startActivity(intent);
                                     finish();
                                     finishAffinity();
                                 } else {
-                                    // Failure
+                                    // Failed to delete account
                                     String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                                     Log.e("delete error", "Failed to delete account: " + errorMessage);
                                     Toast.makeText(getApplicationContext(), "Failed to delete account", Toast.LENGTH_LONG).show();

@@ -35,6 +35,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         ImageButton back = findViewById(R.id.backButton);
         mAuth = FirebaseAuth.getInstance();
 
+        // Set up the back button to navigate to the ProfileActivity
         back.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -46,6 +47,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
         );
 
+        // Set up the save button to trigger password change
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,10 +56,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
     }
 
+    // Method to handle password change
     private void changePassword() {
+        // Get the old and new password inputs
         String oldPassword = oldPasswordEditText.getText().toString().trim();
         String newPassword = newPasswordEditText.getText().toString().trim();
 
+        // Validate the inputs
         if (TextUtils.isEmpty(oldPassword)) {
             Toast.makeText(getApplicationContext(), "Enter your old password", Toast.LENGTH_SHORT).show();
             return;
@@ -73,14 +78,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
             return;
         }
 
+        // Get the currently signed-in user
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null && user.getEmail() != null) {
+            // Create a credential using the old password
             AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPassword);
-
+            // Re-authenticate the user with the old password
             user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        // If re-authentication is successful, update the password
                         user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

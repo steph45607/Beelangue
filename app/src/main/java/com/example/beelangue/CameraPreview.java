@@ -57,19 +57,25 @@ public class CameraPreview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_page);
 
-        backBtn = findViewById(R.id.backButton);
+        // get selected language from last activity
         selectedLanguage = getIntent().getStringExtra("selected_language");
+
+        // define back button to last page
+        backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // navigate back to LearnExploreActivity with the selected language
                 Intent i = new Intent(CameraPreview.this, LearnExploreActivity.class);
                 i.putExtra("selected_language", selectedLanguage);
                 startActivity((i));
             }
         });
 
+        // initialize camera provider
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
+        // Add listener to bind the camera when provider is available
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
@@ -80,12 +86,15 @@ public class CameraPreview extends AppCompatActivity {
             }
         }, ContextCompat.getMainExecutor(this));
 
+        // request camera permissions if not yet granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 101);
         }
 
+        // initialize image capture
         imageCapture = new ImageCapture.Builder().build();
 
+        // set up capture button to take picture when clicked
         ImageButton captureButton = findViewById(R.id.capture_button);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,34 +105,44 @@ public class CameraPreview extends AppCompatActivity {
     }
 
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+        // set up preview
         Preview preview = new Preview.Builder().build();
 
+        // select back-facing camera
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
+        // get reference to the preview view
         PreviewView previewView = findViewById(R.id.previewView);
 
+        // set implementation mode of the preview
         previewView.setImplementationMode(PreviewView.ImplementationMode.COMPATIBLE);
 
+        // bind the preview ot the camera provider lifecycle
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
+        // bind the preview and image capture to the camera
         Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
     }
 
     private void captureImage() {
+        // create a file to save captured image
         File outputFile = new File(getExternalFilesDir(null), "capture.jpg");
 
+        // set up output file options for image capture
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(outputFile).build();
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                // when image saved, perform object detection
                 String savedImagePath = outputFile.getAbsolutePath();
                 detectObjects(savedImagePath, selectedLanguage);
             }
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
+                // handle image capture error
                 Log.e("CameraX", "Error capturing image", exception);
                 Toast.makeText(CameraPreview.this, "Error capturing image", Toast.LENGTH_SHORT).show();
             }
@@ -135,13 +154,16 @@ public class CameraPreview extends AppCompatActivity {
 
         try {
             Log.d("ObjectDetection", "Image Saved at: " + imagePath);
+            // get image from path
             InputImage image = InputImage.fromFilePath(getApplicationContext(), Uri.fromFile(new File(imagePath)));
 
+            // set up image labeler options
             ImageLabelerOptions options =
                     new ImageLabelerOptions.Builder()
                             .setConfidenceThreshold(0.8f)
                             .build();
 
+            // get language code for the target language
             String targetLanguageCode;
             try {
                 Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());
@@ -156,8 +178,9 @@ public class CameraPreview extends AppCompatActivity {
                     .setTargetLanguage(targetLanguageCode)
                     .build();
 
+            // set up download conditions for the translation model
             DownloadConditions conditions = new DownloadConditions.Builder()
-                    .requireWifi() // Optional: Require WiFi for download
+                    .requireWifi() // Require WiFi for download
                     .build();
 
             Translator translator = Translation.getClient(translatorOptions);

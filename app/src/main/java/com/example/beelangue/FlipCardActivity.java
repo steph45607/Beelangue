@@ -30,38 +30,40 @@ public class FlipCardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_page);
-//        Log.d("koesmanto", "card page hehe");
+
+        // Display instruction toast
         Toast.makeText(this, "Click on the card to flip", Toast.LENGTH_LONG).show();
+
+        // Retrieve deck data from previous activity
         Intent intent = getIntent();
         deckData deck = intent.getParcelableExtra("deck");
-//        Log.d("koesmanto", "card page intent call");
-
         Map<String, String> dictionary = deck.wordDict;
-//        Log.d("koesmanto", deck.name);
-//        Log.d("koesmanto", deck.words.toString());
-        Log.d("koesmanto", dictionary.toString());
-
+        Log.d("deck", dictionary.toString());
         String selectedLanguage = getIntent().getStringExtra("selected_language");
-//        Log.d("koesmanto", "string language intent call");
 
         deckTitleView = findViewById(R.id.deckTitle);
-        deckTitleView.setText(deck.name);
         flipButton = findViewById(R.id.flipBtn);
-
         cardNumberTextView = findViewById(R.id.cardNumber);
 
+        // Set deck title
+        deckTitleView.setText(deck.name);
+
+        // Initialize current index and index size
         currentIndex = 0;
         Set<String> keys = dictionary.keySet();
         List<String> keyList = new ArrayList<>(keys);
         indexSize = keys.size();
 
+        // Display initial card
         updateCardNumber();
-
         flipButton.setText(keyList.get(0));
+
+        // Flip button click listener
         flipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("FlipButton", "flipped - " + currentIndex + " " + indexSize);
+                // Toggle between word and translation on flip
                 if(keyStatus) {
                     currentText = keyList.get(currentIndex);
                     flipButton.setText(dictionary.get(currentText));
@@ -75,21 +77,25 @@ public class FlipCardActivity extends AppCompatActivity {
             }
         });
 
+        // Back button click listener
         backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navigate back to LearnActivity
                 Intent intent = new Intent(FlipCardActivity.this, LearnActivity.class);
                 intent.putExtra("selected_language", selectedLanguage);
                 startActivity(intent);
             }
         });
 
+        // Navigate back to LearnActivity
         nextButton = findViewById(R.id.nextBtn);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("FlipButton", "next clicked - " + currentIndex + " " + currentText);
+                // Move to the next card
                 if (currentIndex >= 0 && currentIndex < indexSize-1) {
                     currentIndex++;
                     currentText = keyList.get(currentIndex);
@@ -105,11 +111,13 @@ public class FlipCardActivity extends AppCompatActivity {
             }
         });
 
+        // Previous button click listener
         prevButton = findViewById(R.id.previousBtn);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("FlipButton", "previous clicked - " + currentIndex + " " + currentText);
+                // Move to the previous card
                 if (currentIndex > 0 || currentIndex.equals(indexSize-1)) {
                     currentIndex--;
                     currentText = keyList.get(currentIndex);
@@ -126,6 +134,7 @@ public class FlipCardActivity extends AppCompatActivity {
         });
     }
 
+    // Update card number display
     private void updateCardNumber() {
         String cardNumberText = (currentIndex + 1) + "/" + indexSize;
         cardNumberTextView.setText(cardNumberText);

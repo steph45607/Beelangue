@@ -51,7 +51,6 @@ public class LearnActivity extends AppCompatActivity {
         setContentView(R.layout.learn_page);
 
         back = findViewById(R.id.backBtn);
-//        create = findViewById(R.id.createBtn);
         create1 = findViewById(R.id.createDeck);
         buttonContainer = findViewById(R.id.buttonContainer);
 
@@ -59,8 +58,10 @@ public class LearnActivity extends AppCompatActivity {
         searchEditText = findViewById(R.id.searchEditText);
         decks = new ArrayList<deckData>();
 
+        // Get the selected language passed from the previous activity
         String selectedLanguage = getIntent().getStringExtra("selected_language");
 
+        // Set click listener for the back button
         back.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -73,6 +74,7 @@ public class LearnActivity extends AppCompatActivity {
                 }
         );
 
+        // Set click listener for the create button
         create1.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -84,6 +86,7 @@ public class LearnActivity extends AppCompatActivity {
                 }
         );
 
+        // Set click listener for the search button
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +100,7 @@ public class LearnActivity extends AppCompatActivity {
             }
         });
 
+        // Add a text watcher to handle search input changes
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -104,7 +108,7 @@ public class LearnActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d("koesmanto", s.toString());
+                Log.d("deck", s.toString());
                 searchDecks(s.toString(), selectedLanguage);
             }
 
@@ -113,17 +117,19 @@ public class LearnActivity extends AppCompatActivity {
             }
         });
 
+        // Initialize Firebase database reference
         databaseReference = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("deck");
         fetchDecks(selectedLanguage);
     }
 
     private void fetchDecks(String language) {
-        Log.d("koesmanto", "fetch deck called");
+        Log.d("deck", "fetch deck called");
 
+        // Set up an event listener to fetch decks from the database
         deckEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("koesmanto", "deck gotten called");
+                Log.d("DB", "deck gotten called");
                 buttonContainer.removeAllViews();
                 decks.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -132,7 +138,7 @@ public class LearnActivity extends AppCompatActivity {
                     };
                     ArrayList<String> wordList = snapshot.child("words").getValue(t);
                     deckData deck = new deckData(deckName, wordList, null);
-                    Log.d("koesmanto", deckName);
+                    Log.d("deck", deckName);
                     decks.add(0, deck);
                 }
                 for (deckData deck : decks) {
@@ -142,7 +148,7 @@ public class LearnActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("koesmanto", databaseError.getMessage());
+                Log.e("DB", databaseError.getMessage());
                 Toast.makeText(LearnActivity.this, "Failed to load decks.", Toast.LENGTH_SHORT).show();
             }
         };
@@ -150,24 +156,25 @@ public class LearnActivity extends AppCompatActivity {
     }
 
     private void createDeckButton(final deckData  deck, String language) {
+        // Create a new button for each deck
         Button button = new Button(this);
         button.setText(deck.name);
         button.setTextAppearance(R.style.buttonStyle);
         int color = getResources().getColor(R.color.secondary);
         button.setBackgroundColor(color);
         button.setPadding(16, 8, 16, 8);
-//        @StyleRes int defStyleRes= R.style.buttonStyle;
-//        button.setBackgroundResource(defStyleRes);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         params.setMargins(0,0,0,10);
         button.setLayoutParams(params);
+
+        // Set click listener for each deck button
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("koesmanto", deck.words.toString());
+                Log.d("deck", deck.words.toString());
                 Map<String, String> dict = new HashMap<>();
 //                List<String> dict = new ArrayList<>();
                 for (String word : deck.words) {
@@ -177,13 +184,13 @@ public class LearnActivity extends AppCompatActivity {
                             if (translatedText != null) {
 //                                dict.add(translatedText);
                                 dict.put(word, translatedText);
-                                Log.d("koesmanto", "Translated text = " + translatedText);
+                                Log.d("translate", "Translated text = " + translatedText);
                             } else {
-                                Log.d("koesmanto", "Translation failed for word: " + word);
+                                Log.d("translate", "Translation failed for word: " + word);
                             }
                             if (dict.size() == deck.words.size()) {
                                 deckData newDeck = new deckData(deck.name, (ArrayList<String>) deck.words, dict);
-                                Log.d("koesmanto", "Dict is set: " + newDeck.wordDict);
+                                Log.d("deck", "Dict is set: " + newDeck.wordDict);
                                 // Proceed to the next activity after all translations are done
                                 Intent i = new Intent(LearnActivity.this, FlipCardActivity.class);
                                 i.putExtra("selected_language", language);
@@ -200,9 +207,9 @@ public class LearnActivity extends AppCompatActivity {
 
     private void searchDecks(String query, String language) {
         buttonContainer.removeAllViews();
-        Log.d("koesmanto", "decknames" + decks.toString());
+        Log.d("deck", "decknames" + decks.toString());
         for (deckData deck : decks) {
-            Log.d("koesmanto", "deckname: " + deck.name);
+            Log.d("deck", "deckname: " + deck.name);
             if (deck.name.toLowerCase().contains(query.toLowerCase())) {
                 createDeckButton(deck, language);
             }
@@ -212,7 +219,7 @@ public class LearnActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        // to avoid the fetching happening in the bg when the activity is not opened
+        // Remove the database event listener when the activity is stopped
         if (deckEventListener != null) {
             databaseReference.removeEventListener(deckEventListener);
         }
@@ -224,6 +231,7 @@ public class LearnActivity extends AppCompatActivity {
 
 
     private void translate(String word, String targetLanguage, TranslationCallback callback) {
+        // Determine the target language code using reflection
         String targetLanguageCode;
         try {
             Field field = TranslateLanguage.class.getField(targetLanguage.toUpperCase());
@@ -241,7 +249,7 @@ public class LearnActivity extends AppCompatActivity {
         Translator translator = Translation.getClient(translatorOptions);
 
         DownloadConditions conditions = new DownloadConditions.Builder()
-                .requireWifi() // Optional: Require WiFi for download
+                .requireWifi() // Require WiFi for download
                 .build();
 
         RemoteModelManager modelManager = RemoteModelManager.getInstance();

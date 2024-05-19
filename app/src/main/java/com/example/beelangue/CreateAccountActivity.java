@@ -40,16 +40,19 @@ public class CreateAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account);
+
+        // Initialize Firebase
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
-//        mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
+        // Initialize and set click listener for the login button
         loginButton = findViewById(R.id.loginBtn);
         loginButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // Navigate to LoginActivity when login button is clicked
                         Intent i = new Intent(CreateAccountActivity.this, LoginActivity.class);
                         startActivity(i);
                     }
@@ -61,15 +64,18 @@ public class CreateAccountActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.editPassword);
         usernameText = findViewById(R.id.editUsername);
 
+        // Set click listener for the create account button
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Call the method to register a new user
                 registerNewUser();
             }
         });
 
     }
 
+    // Method to register a new user
     private void registerNewUser() {
         String email, password, username;
         email = emailText.getText().toString();
@@ -79,6 +85,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         // Email validation regex
         String emailRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
+        // Check for empty or invalid inputs and display appropriate messages
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(),
                             "Please enter email!!",
@@ -120,21 +127,23 @@ public class CreateAccountActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d("koesmanto", "onDataChange called");
+                        Log.d("DB", "onDataChange called");
                         if (snapshot.exists()) {
-                            Log.d("koesmanto", "Username already exists: " + username);
+                            Log.d("DB", "Username already exists: " + username);
                             Toast.makeText(getApplicationContext(),
                                             "Username already exists!!",
                                             Toast.LENGTH_LONG)
                                     .show();
                         } else {
+                            // Create new firebase user
                             createFirebaseUser(email, password, username);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("koesmanto", "Database error: " + error.getMessage());
+                        // Handle database errors
+                        Log.d("DB", "Database error: " + error.getMessage());
                         Toast.makeText(getApplicationContext(),
                                         "Database error. Please try again later",
                                         Toast.LENGTH_LONG)
@@ -143,12 +152,14 @@ public class CreateAccountActivity extends AppCompatActivity {
                 });
     }
 
+    // Method to create a new user in Firebase Authentication
     private void createFirebaseUser(String email, String password, String username) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    // Get the current user and send verification email
                     FirebaseUser user = mAuth.getCurrentUser();
                     if (user != null) {
                         user.sendEmailVerification()
@@ -156,9 +167,10 @@ public class CreateAccountActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    // Save user data in the database after successful registration
                                     String userId = user.getUid();
                                     saveData(userId, username, email);
-
+                                    // Navigate to WaitingForVerificationActivity
                                     Intent intent = new Intent(CreateAccountActivity.this, WaitingForVerificationActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -172,6 +184,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                         });
                     }
                 } else {
+                    // Handle registration failure
                     String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
                     assert errorMessage != null;
                     if (errorMessage.contains("email address is already in use")) {
@@ -190,8 +203,9 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
     }
 
+    // Method to save user data in Firebase Realtime Database
     private void saveData(String userId, String username, String email) {
-        Log.d("koesmanto", "Attempting to save details for user: " + userId);
+        Log.d("DB", "Attempting to save details for user: " + userId);
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("username", username);
         userMap.put("email", email);
@@ -201,7 +215,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d("koesmanto", "User details saved successfully for UID: " + userId);
+                            Log.d("DB", "User details saved successfully for UID: " + userId);
                         } else {
                             // Failed
                             Toast.makeText(getApplicationContext(),

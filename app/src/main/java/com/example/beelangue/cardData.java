@@ -6,6 +6,7 @@ public class cardData {
 
     public cardData(){}
 
+    // Parameterized constructor to initialize cardData with specific values
     public cardData(String country, String language){
         this.country = country;
         this.language = language;

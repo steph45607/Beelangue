@@ -16,8 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-//import com.google.firebase.firestore.FirebaseFirestore;
-//import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,11 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
 
+        // initialize firebase database reference
         DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("language");
+
+        // add listener to read data from database
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // initiliaze data source list
                 source = new ArrayList<>();
+
+                // iterate through the data snapshot to extract country and language information
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     String country = snapshot.child("country").getValue(String.class);
                     String lang = snapshot.child("language").getValue(String.class);
@@ -55,16 +59,17 @@ public class MainActivity extends AppCompatActivity {
         });
         Log.d("languageDB", "source received");
 
-//        getFlagImage();
-
+        // define profile button and set click listener
         profileBtn = findViewById(R.id.profile);
         profileBtn.setOnClickListener(
                 v -> {
+                    // navigate to ProfileActivity when profile button is clicked
                     Intent i = new Intent(MainActivity.this, ProfileActivity.class);
                     startActivity(i);
                 }
         );
 
+        // Initialize and set click listener for Indonesian flag
         indo = findViewById(R.id.indonesiaFlag);
         indo.setOnClickListener(
                 new View.OnClickListener() {
@@ -77,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        // Initialize and set click listener for French flag
         france = findViewById(R.id.franceFlag);
         france.setOnClickListener(
                 new View.OnClickListener() {
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        // Initialize and set click listener for Vietnamese flag
         vietnam = findViewById(R.id.vietnamFlag);
         vietnam.setOnClickListener(
                 new View.OnClickListener() {
@@ -101,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        // Initialize and set click listener for Spanish flag
         spain = findViewById(R.id.spainFlag);
         spain.setOnClickListener(
                 new View.OnClickListener() {
@@ -113,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        // Initialize and set click listener for Italian flag
         italy = findViewById(R.id.italyFlag);
         italy.setOnClickListener(
                 new View.OnClickListener() {
@@ -125,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        // Initialize and set click listener for Russian flag
         russia = findViewById(R.id.russiaFlag);
         russia.setOnClickListener(
                 new View.OnClickListener() {
@@ -137,6 +147,5 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
     }
-
 }
 

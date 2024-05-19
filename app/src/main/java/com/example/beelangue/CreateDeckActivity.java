@@ -42,6 +42,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_deck);
 
+        // Retrieve selected language from previous activity
         String selectedLanguage = getIntent().getStringExtra("selected_language");
 
         wordText = findViewById(R.id.wordText);
@@ -51,6 +52,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         wordsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, words);
         wordsListView.setAdapter(wordsAdapter);
 
+        // Set up the add button to add words to the list
         addBtn = findViewById(R.id.addCardBtn);
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +61,7 @@ public class CreateDeckActivity extends AppCompatActivity {
             }
         });
 
+        // Set up the back button to navigate back to LearnActivity
         backButton = findViewById(R.id.backBtn);
         backButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -71,6 +74,7 @@ public class CreateDeckActivity extends AppCompatActivity {
                 }
         );
 
+        // Set up the create deck button to finalize and save the deck
         createDeckBtn = findViewById(R.id.finishDeckBtn);
         createDeckBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +84,7 @@ public class CreateDeckActivity extends AppCompatActivity {
             }
         });
 
-        // long click to delete
+        // Set up long click listener for list items to delete words
         wordsListView.setOnItemLongClickListener((parent, view, position, id) -> {
             String word = words.get(position);
             deleteConfirmation(position, word);
@@ -88,6 +92,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         });
     }
 
+    // Method to add a word to the list
     private void addWordToList() {
         String word = wordText.getText().toString().trim();
         if (!word.isEmpty()) {
@@ -106,6 +111,7 @@ public class CreateDeckActivity extends AppCompatActivity {
 
     }
 
+    // Method to show a confirmation dialog before deleting a word
     private void deleteConfirmation(int position, String word) {
         new AlertDialog.Builder(this)
                 .setTitle("Delete Word")
@@ -120,6 +126,7 @@ public class CreateDeckActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Method to delete a word from the list
     private void deleteWord(int position) {
         String word = words.remove(position);
         wordsAdapter.notifyDataSetChanged();
@@ -127,6 +134,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         Log.d("deckDB", "word deleted: " + word);
     }
 
+    // Method to delete a word from the list
     private void checkName(String selectedLanguage) {
         String name = titleText.getText().toString().trim().toLowerCase();
         if (name.isEmpty()) {
@@ -138,6 +146,7 @@ public class CreateDeckActivity extends AppCompatActivity {
             return;
         }
 
+        // Check if a deck with the same name already exists in the database
         DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("deck");
         Query query = ref.orderByChild("name").equalTo(name);
 
@@ -160,6 +169,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         });
     }
 
+    // Method to save the deck to the database
     private void saveDeckToDatabase(String selectedLanguage) {
         Log.d("deckDB", "save button clicked");
         String title;
@@ -167,12 +177,12 @@ public class CreateDeckActivity extends AppCompatActivity {
         Log.d("deckDB", title + " " + words.get(0));
         deckData deck = new deckData(title, words, null);
         Log.d("deckDB", "deck object created, not saved");
-//        Log.d("deckDB", deck.toString());
 
+        // Reference to the database
         DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("deck");
         Log.d("deckDB", "database reference defined");
-//        final String pushID = ref.push().getKey();
-//        DatabaseReference newRef = ref.push();
+
+        // Save the deck to the database
         ref.push().setValue(deck)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
