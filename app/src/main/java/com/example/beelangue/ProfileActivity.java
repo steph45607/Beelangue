@@ -210,6 +210,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     finishAffinity();
                                 } else {
                                     // Failure
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                    Log.e("delete error", "Failed to delete account: " + errorMessage);
                                     Toast.makeText(getApplicationContext(), "Failed to delete account", Toast.LENGTH_LONG).show();
                                 }
                             }
