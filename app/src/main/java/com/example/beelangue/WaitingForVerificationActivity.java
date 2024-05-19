@@ -81,7 +81,7 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         changeEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeEmail();
+                cancelRegistration();
             }
         });
 
@@ -90,7 +90,7 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                deleteAccount();
+                cancelRegistration();
                 Intent intent = new Intent(WaitingForVerificationActivity.this, CreateAccountActivity.class);
                 startActivity(intent);
                 finish();
@@ -102,7 +102,7 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (!mUser.isEmailVerified()) {
-            deleteAccount();
+            cancelRegistration();
         }
     }
 
@@ -134,14 +134,7 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
         resendEmailButton.setTextColor(ContextCompat.getColor(this, R.color.text_color_disabled));
     }
 
-    private void changeEmail() {
-        deleteAccount();
-        Intent intent = new Intent(WaitingForVerificationActivity.this, CreateAccountActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void deleteAccount() {
+    private void cancelRegistration() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
@@ -159,9 +152,14 @@ public class WaitingForVerificationActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Account deleted
                                     Toast.makeText(getApplicationContext(), "Registration cancelled", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(WaitingForVerificationActivity.this, CreateAccountActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                     finishAffinity();
                                 } else {
                                     // Failure
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                    Log.e("delete account", "Failed to delete account: " + errorMessage);
                                     Toast.makeText(getApplicationContext(), "Failed to delete account", Toast.LENGTH_LONG).show();
                                 }
                             }
