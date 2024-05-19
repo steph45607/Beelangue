@@ -27,7 +27,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.common.model.RemoteModelManager;
 import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.TranslateRemoteModel;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
@@ -158,68 +160,38 @@ public class CameraPreview extends AppCompatActivity {
                     .requireWifi() // Optional: Require WiFi for download
                     .build();
 
-            Translator englishindoTranslator = Translation.getClient(translatorOptions);
+            Translator translator = Translation.getClient(translatorOptions);
+
+            RemoteModelManager modelManager = RemoteModelManager.getInstance();
+            TranslateRemoteModel model = new TranslateRemoteModel.Builder(targetLanguageCode).build();
 
             // Check if the model is downloaded
-            englishindoTranslator.downloadModelIfNeeded(conditions)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            // Model downloaded, proceed with translation
-                            ImageLabeler labeler = ImageLabeling.getClient(options);
+            modelManager.isModelDownloaded(model)
+                    .addOnSuccessListener(isDownloaded -> {
+                        if (isDownloaded) {
+                            // Model is already downloaded, proceed with object detection and translation
+                            performObjectDetectionAndTranslation(translator, image, options);
+                        } else {
+                            // Model is not downloaded, show a toast message
+                            Toast.makeText(CameraPreview.this, "Downloading translation model...", Toast.LENGTH_SHORT).show();
 
-                            labeler.process(image)
-                                    .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
-                                        @Override
-                                        public void onSuccess(List<ImageLabel> labels) {
-                                            if (labels.isEmpty()) {
-                                                Log.d("ObjectDetection", "No objects detected");
-                                                Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                StringBuilder labelTextBuilder = new StringBuilder();
-                                                int totalLabels = labels.size();
-                                                for (int i = 0; i < totalLabels; i++) {
-                                                    ImageLabel label = labels.get(i);
-                                                    String labelText = label.getText();
-                                                    float confidence = label.getConfidence();
-                                                    Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
-                                                    labelTextBuilder.append(labelText);
-                                                    if (i < totalLabels - 1) {
-                                                        labelTextBuilder.append(", ");
-                                                    }
-                                                }
-                                                String allLabels = labelTextBuilder.toString().trim();
-                                                englishindoTranslator.translate(allLabels)
-                                                        .addOnSuccessListener(new OnSuccessListener<String>() {
-                                                            @Override
-                                                            public void onSuccess(String translatedText) {
-                                                                object.setText(String.format("%s (%s)", allLabels, translatedText));
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception exception) {
-                                                                Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
-                                                            }
-                                                        });
-                                            }
-                                        }
+                            // Download the model
+                            translator.downloadModelIfNeeded(conditions)
+                                    .addOnSuccessListener(unused -> {
+                                        // Model download successful, proceed with object detection and translation
+                                        performObjectDetectionAndTranslation(translator, image, options);
                                     })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
-                                            Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
-                                        }
+                                    .addOnFailureListener(exception -> {
+                                        // Model download failed, show a toast message
+                                        Log.e("ObjectDetection", "Model download failed: " + exception.getMessage());
+                                        Toast.makeText(CameraPreview.this, "Model download failed", Toast.LENGTH_SHORT).show();
                                     });
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Log.e("ObjectDetection", "Model download failed: " + exception.getMessage());
-                            // Handle model download failure (e.g., display error message)
-                        }
+                    .addOnFailureListener(exception -> {
+                        // Failed to check if model is downloaded
+                        Log.e("ObjectDetection", "Failed to check if model is downloaded: " + exception.getMessage());
+                        Toast.makeText(CameraPreview.this, "Failed to check model status", Toast.LENGTH_SHORT).show();
                     });
         } catch (IOException e) {
             Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
@@ -228,7 +200,58 @@ public class CameraPreview extends AppCompatActivity {
         }
     }
 
-            @Override
+    // Method to perform object detection and translation
+    private void performObjectDetectionAndTranslation(Translator translator, InputImage image, ImageLabelerOptions options) {
+        ImageLabeler labeler = ImageLabeling.getClient(options);
+
+        labeler.process(image)
+                .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+                    @Override
+                    public void onSuccess(List<ImageLabel> labels) {
+                        if (labels.isEmpty()) {
+                            Log.d("ObjectDetection", "No objects detected");
+                            Toast.makeText(CameraPreview.this, "No objects detected", Toast.LENGTH_SHORT).show();
+                        } else {
+                            StringBuilder labelTextBuilder = new StringBuilder();
+                            int totalLabels = labels.size();
+                            for (int i = 0; i < totalLabels; i++) {
+                                ImageLabel label = labels.get(i);
+                                String labelText = label.getText();
+                                float confidence = label.getConfidence();
+                                Log.d("ObjectDetection", "Object Detected: " + labelText + " Confidence: " + confidence);
+                                labelTextBuilder.append(labelText);
+                                if (i < totalLabels - 1) {
+                                    labelTextBuilder.append(", ");
+                                }
+                            }
+                            String allLabels = labelTextBuilder.toString().trim();
+                            translator.translate(allLabels)
+                                    .addOnSuccessListener(new OnSuccessListener<String>() {
+                                        @Override
+                                        public void onSuccess(String translatedText) {
+                                            object.setText(String.format("%s (%s)", allLabels, translatedText));
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            Log.e("ObjectDetection", "Translation Failed: " + exception.getMessage());
+                                            // Handle translation failure (e.g., display error message)
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("ObjectDetection", "Object detection failed: " + e.getMessage());
+                        Toast.makeText(CameraPreview.this, "Object detection failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 101) {

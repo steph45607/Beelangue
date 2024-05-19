@@ -23,7 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.common.model.RemoteModelManager;
 import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.TranslateRemoteModel;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
@@ -242,20 +244,55 @@ public class LearnActivity extends AppCompatActivity {
                 .requireWifi() // Optional: Require WiFi for download
                 .build();
 
-        translator.downloadModelIfNeeded(conditions)
-                .addOnSuccessListener(unused -> {
-                    translator.translate(word)
-                            .addOnSuccessListener(translatedText -> {
-                                Log.d("translate", String.format("%s (%s)", word, translatedText));
-                                callback.onTranslationCompleted(translatedText);
-                            })
-                            .addOnFailureListener(exception -> {
-                                Log.e("translate", "translation failed: " + exception.getMessage());
-                                callback.onTranslationCompleted(null);
-                            });
+        RemoteModelManager modelManager = RemoteModelManager.getInstance();
+        TranslateRemoteModel model = new TranslateRemoteModel.Builder(targetLanguageCode).build();
+
+        // Check if the model is already downloaded
+        modelManager.isModelDownloaded(model)
+                .addOnSuccessListener(isDownloaded -> {
+                    if (isDownloaded) {
+                        // Model is already downloaded, proceed with translation
+                        translator.translate(word)
+                                .addOnSuccessListener(translatedText -> {
+                                    Log.d("translate", String.format("%s (%s)", word, translatedText));
+                                    callback.onTranslationCompleted(translatedText);
+                                })
+                                .addOnFailureListener(exception -> {
+                                    Log.e("translate", "Translation failed: " + exception.getMessage());
+                                    callback.onTranslationCompleted(null);
+                                });
+                    } else {
+                        // Model is not downloaded, show a toast message
+                        Toast.makeText(this, "Downloading model for: " + targetLanguage, Toast.LENGTH_SHORT).show();
+
+                        // Download the model
+                        translator.downloadModelIfNeeded(conditions)
+                                .addOnSuccessListener(unused -> {
+                                    // Model download successful, show a toast message
+                                    Toast.makeText(this, "Translation model downloaded.", Toast.LENGTH_SHORT).show();
+
+                                    // Proceed with translation
+                                    translator.translate(word)
+                                            .addOnSuccessListener(translatedText -> {
+                                                Log.d("translate", String.format("%s (%s)", word, translatedText));
+                                                callback.onTranslationCompleted(translatedText);
+                                            })
+                                            .addOnFailureListener(exception -> {
+                                                Log.e("translate", "Translation failed: " + exception.getMessage());
+                                                callback.onTranslationCompleted(null);
+                                            });
+                                })
+                                .addOnFailureListener(exception -> {
+                                    // Model download failed, show a toast message
+                                    Log.e("translate", "Model download failed: " + exception.getMessage());
+                                    Toast.makeText(this, "Translation model download failed.", Toast.LENGTH_SHORT).show();
+                                    callback.onTranslationCompleted(null);
+                                });
+                    }
                 })
                 .addOnFailureListener(exception -> {
-                    Log.e("translate", "Model Download failed: " + exception.getMessage());
+                    Log.e("translate", "Failed to check if model is downloaded: " + exception.getMessage());
+                    Toast.makeText(this, "Failed to check model status.", Toast.LENGTH_SHORT).show();
                     callback.onTranslationCompleted(null);
                 });
     }
