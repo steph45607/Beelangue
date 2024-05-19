@@ -84,6 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         mAuth.signOut();
+                        Toast.makeText(getApplicationContext(), "Logout successful", Toast.LENGTH_LONG).show();
                         Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
                         startActivity(i);
                         finish();
