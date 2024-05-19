@@ -13,8 +13,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="35dp"
             android:layout_marginTop="30dp"
+            android:layout_marginBottom="35dp"
             android:orientation="vertical">
 
             <ImageButton
@@ -76,109 +76,109 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/changeUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="change username"
                 android:backgroundTint="@color/transparent"
-                app:strokeColor="@color/secondary"
-                app:strokeWidth="2dp"
+                android:fontFamily="@font/playfair"
+                android:text="change username"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/person"
-                android:textColor="@color/black"
-                android:fontFamily="@font/playfair"
-                android:textAlignment="textStart"
                 app:iconSize="30dp"
                 app:iconTint="@color/black"
-                />
+                app:strokeColor="@color/secondary"
+                app:strokeWidth="2dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Library Settings"
                 android:backgroundTint="@color/transparent"
-                app:strokeColor="@color/secondary"
-                app:strokeWidth="2dp"
+                android:fontFamily="@font/playfair"
+                android:text="change password"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
                 app:cornerRadius="10dp"
-                app:icon="@drawable/settings"
-                android:textColor="@color/black"
-                android:fontFamily="@font/playfair"
-                android:textAlignment="textStart"
+                app:icon="@drawable/password"
                 app:iconSize="30dp"
                 app:iconTint="@color/black"
-                />
+                app:strokeColor="@color/secondary"
+                app:strokeWidth="2dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="About"
                 android:backgroundTint="@color/transparent"
+                android:fontFamily="@font/playfair"
+                android:text="change email"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/mail"
+                app:iconSize="30dp"
+                app:iconTint="@color/black"
                 app:strokeColor="@color/secondary"
-                app:strokeWidth="2dp"
+                app:strokeWidth="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/transparent"
+                android:fontFamily="@font/playfair"
+                android:text="About"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/info"
-                android:textColor="@color/black"
-                android:fontFamily="@font/playfair"
-                android:textAlignment="textStart"
                 app:iconSize="30dp"
                 app:iconTint="@color/black"
-                />
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Report Error"
-                android:backgroundTint="@color/transparent"
                 app:strokeColor="@color/secondary"
-                app:strokeWidth="2dp"
-                app:cornerRadius="10dp"
-                app:icon="@drawable/bug"
-                android:textColor="@color/black"
-                android:fontFamily="@font/playfair"
-                android:textAlignment="textStart"
-                app:iconSize="30dp"
-                app:iconTint="@color/black"
-                />
+                app:strokeWidth="2dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/deleteAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delete Account"
                 android:backgroundTint="@color/transparent"
-                app:strokeColor="@color/secondary"
-                app:strokeWidth="2dp"
+                android:fontFamily="@font/playfair"
+                android:text="Delete Account"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/delete"
-                android:textColor="@color/black"
-                android:fontFamily="@font/playfair"
-                android:textAlignment="textStart"
                 app:iconSize="30dp"
                 app:iconTint="@color/black"
-                />
+                app:strokeColor="@color/secondary"
+                app:strokeWidth="2dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Log Out"
                 android:backgroundTint="@color/transparent"
-                app:strokeColor="@color/secondary"
-                app:strokeWidth="2dp"
+                android:fontFamily="@font/playfair"
+                android:text="Log Out"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/logout"
-                android:textColor="@color/black"
-                android:fontFamily="@font/playfair"
-                android:textAlignment="textStart"
                 app:iconSize="30dp"
                 app:iconTint="@color/black"
-                />
+                app:strokeColor="@color/secondary"
+                app:strokeWidth="2dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Belangue@2024"
-                android:gravity="center"
-                android:textColor="@color/secondary"
-                android:textSize="14dp"
+                android:layout_marginTop="120dp"
                 android:fontFamily="@font/poller_one"
-                android:layout_marginTop="120dp"/>
+                android:gravity="center"
+                android:text="Belangue@2024"
+                android:textColor="@color/secondary"
+                android:textSize="14dp" />
 
         </LinearLayout>
 
