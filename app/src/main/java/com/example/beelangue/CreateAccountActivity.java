@@ -83,7 +83,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         password = passwordText.getText().toString();
 
         // Email validation regex
-        String emailRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        String emailRegex = "[a-zA-Z0-9._-]+@[a-z]+[\\.+[a-z]+]+";
 
         // Check for empty or invalid inputs and display appropriate messages
         if (TextUtils.isEmpty(email)) {
