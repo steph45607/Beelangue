@@ -37,6 +37,7 @@
         <activity android:name=".LearnActivity" />
         <activity android:name=".WaitingForVerificationActivity" />
         <activity android:name=".ChangePasswordActivity" />
+        <activity android:name=".ChangeEmailActivity" />
         <activity android:name=".FlipCardActivity"/>
     </application>
 

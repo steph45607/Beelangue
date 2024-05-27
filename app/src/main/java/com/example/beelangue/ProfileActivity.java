@@ -31,6 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     ImageButton backBtn;
     Button changeUsernameBtn;
     Button changePasswordBtn;
+    Button changeEmailBtn;
     Button logoutBtn;
     Button deleteAccountBtn;
     FirebaseAuth mAuth;
@@ -82,6 +83,15 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Navigate to ChangePasswordActivity
                 Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        changeEmailBtn = findViewById(R.id.changeEmail);
+        changeEmailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, ChangeEmailActivity.class);
                 startActivity(intent);
             }
         });
