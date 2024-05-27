@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     Button createAccountBtn, loginButton, resetPasswordButton;
     EditText emailText, passwordText;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Authentication
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
         // Create Account button click listener
         createAccountBtn = findViewById(R.id.create_button);
@@ -75,10 +77,48 @@ public class LoginActivity extends AppCompatActivity {
         // Check if the user is already logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            // If logged in, navigate to MainActivity
-            Log.d("DB", "onDataChange called" + currentUser.getUid());
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
+            if (!currentUser.isEmailVerified()){
+                cancelRegistration();
+            } else {
+                // If logged in, navigate to MainActivity
+                Log.d("DB", "onDataChange called" + currentUser.getUid());
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            }
+        }
+    }
+
+    // delete previous user if email is not verified
+    private void cancelRegistration() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+
+            // Delete user data from database
+            mDatabase.child("users").child(userId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        // User data deleted, now delete the user account
+                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // Account deleted
+                                    Toast.makeText(getApplicationContext(), "Registration cancelled", Toast.LENGTH_LONG).show();
+                                } else {
+                                    // Failure
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                    Log.e("delete account", "Failed to delete account: " + errorMessage);
+                                    Toast.makeText(getApplicationContext(), "Failed to delete account", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Failed to delete user data", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
     }
 
