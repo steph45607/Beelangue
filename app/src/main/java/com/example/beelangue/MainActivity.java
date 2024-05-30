@@ -2,20 +2,30 @@ package com.example.beelangue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +38,67 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
+
+        List<TranslatorOptions> languages = new ArrayList<>();
+        languages.add(
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.INDONESIAN)
+                        .build());
+        languages.add(
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.FRENCH)
+                        .build());
+        languages.add(
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.VIETNAMESE)
+                        .build());
+        languages.add(
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.SPANISH)
+                        .build());
+        languages.add(
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.RUSSIAN)
+                        .build());
+        languages.add(
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.ITALIAN)
+                        .build());
+
+        List<Translator> translators = new ArrayList<>();
+        for (TranslatorOptions options : languages) {
+            translators.add(Translation.getClient(options));
+        }
+
+        // Initialize the toast variable.
+        Toast toast = Toast.makeText(this, "Downloading models", Toast.LENGTH_LONG);
+        toast.show();
+        CountDownTimer timer = getCountDownTimer();
+
+        for (Translator translator : translators) {
+//            Toast.makeText(MainActivity.this, "Models are being downloaded", Toast.LENGTH_LONG).show();
+            translator.downloadModelIfNeeded()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("translate", "Models downloaded successfully");
+                            timer.cancel();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("translate", "Model download failed");
+                            timer.cancel();
+                        }
+                    });
+        }
 
         // initialize firebase database reference
         DatabaseReference ref = FirebaseDatabase.getInstance("https://beelangue-d5b83-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("language");
@@ -146,6 +217,23 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    @NonNull
+    private CountDownTimer getCountDownTimer() {
+        CountDownTimer timer = new CountDownTimer(6000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Toast.makeText(MainActivity.this,"Downloading models... (" + millisUntilFinished / 1000 + " seconds remaining)",Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onFinish() {
+                Toast.makeText(MainActivity.this, "Model download finished", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        timer.start();
+        return timer;
     }
 }
 

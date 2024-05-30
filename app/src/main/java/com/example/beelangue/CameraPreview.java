@@ -149,7 +149,7 @@ public class CameraPreview extends AppCompatActivity {
         });
     }
 
-    private void detectObjects(String imagePath, String targetLanguage) {
+    void detectObjects(String imagePath, String targetLanguage) {
         object = findViewById(R.id.objectDetected);
 
         try {
