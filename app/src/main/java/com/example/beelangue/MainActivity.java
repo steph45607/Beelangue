@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     Button profileBtn;
     ImageButton indo, france, vietnam, spain, italy, russia;
-    Button flagBtn;
     ArrayList<cardData> source;
 
     @Override
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            Log.d("translate", "Models downloaded successfully");
+                            Log.d("translate", translator.toString()+ " Models downloaded successfully");
                             timer.cancel();
                         }
                     })
