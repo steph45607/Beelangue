@@ -79,23 +79,22 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the toast variable.
         Toast toast = Toast.makeText(this, "Downloading models", Toast.LENGTH_LONG);
         toast.show();
-        CountDownTimer timer = getCountDownTimer();
 
         for (Translator translator : translators) {
-//            Toast.makeText(MainActivity.this, "Models are being downloaded", Toast.LENGTH_LONG).show();
             translator.downloadModelIfNeeded()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
+                            Toast.makeText(MainActivity.this, "Models downloaded successfully", Toast.LENGTH_SHORT).show();
                             Log.d("translate", "Models downloaded successfully");
-                            timer.cancel();
+                            toast.cancel();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.d("translate", "Model download failed");
-                            timer.cancel();
+                            toast.cancel();
                         }
                     });
         }
@@ -224,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         CountDownTimer timer = new CountDownTimer(6000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Toast.makeText(MainActivity.this,"Downloading models... (" + millisUntilFinished / 1000 + " seconds remaining)",Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"Downloading models (" + millisUntilFinished / 1000 + " seconds remaining)",Toast.LENGTH_LONG).show();
             }
             @Override
             public void onFinish() {

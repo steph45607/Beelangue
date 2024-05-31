@@ -46,6 +46,7 @@ dependencies {
     implementation("androidx.test.ext:truth:1.5.0")
     implementation("androidx.test.espresso:espresso-intents:3.5.1")
     implementation("com.google.android.play:core:1.10.3")
+    annotationProcessor("androidx.test:runner:1.4.0")
     val cameraxVersion = "1.3.3";
     val fragment_version = "1.7.0"
     // Java language implementation

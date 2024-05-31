@@ -224,7 +224,7 @@ public class CameraPreview extends AppCompatActivity {
     }
 
     // Method to perform object detection and translation
-    private void performObjectDetectionAndTranslation(Translator translator, InputImage image, ImageLabelerOptions options) {
+    void performObjectDetectionAndTranslation(Translator translator, InputImage image, ImageLabelerOptions options) {
         ImageLabeler labeler = ImageLabeling.getClient(options);
 
         labeler.process(image)
