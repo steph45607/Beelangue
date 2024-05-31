@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.play.core.splitinstall.SplitInstallManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -149,8 +148,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // Method to check if the input is an email
-    private boolean isEmail(String email) {
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    static boolean isEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+[.[a-z]+]+";
         return email.matches(emailPattern);
     }
 
