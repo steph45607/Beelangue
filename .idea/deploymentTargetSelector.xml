@@ -13,6 +13,9 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+      <SelectionState runConfigName="CreateDeckUITest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
       <SelectionState runConfigName="CameraPreviewUITest">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2024-05-30T13:46:14.687038700Z">
@@ -24,7 +27,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="CameraPreviewInstrumentedTest">
+      <SelectionState runConfigName="clearWordInputFiled()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="testCaptureButton() (1)">
